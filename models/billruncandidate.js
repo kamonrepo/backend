@@ -4,6 +4,7 @@ const billRunCandidateSchema = mongoose.Schema({
 
     host: { type: mongoose.Schema.Types.ObjectId, ref: 'billruns'},
     client: { type: mongoose.Schema.Types.ObjectId, ref: 'clients'},
+    group: { type: mongoose.Schema.Types.ObjectId, ref: 'groups'},
     name: { type: String, required: true },
     package: { type: String, required: true},
     monthlyFee: { type: String, required: true },

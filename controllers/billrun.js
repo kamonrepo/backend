@@ -8,7 +8,6 @@ import mongoose from 'mongoose';
 const router = express.Router();
 Fawn.init(mongoose);
 
-
 export const getBillrun = async (req, res) => {
     try {
         const getAllBillRun = await BillRun.find();
@@ -19,12 +18,11 @@ export const getBillrun = async (req, res) => {
     }
   }
 
-
 export const createBillRun  = async (req, res) => {
 
     const reqModel = { 
         billRun:  req.body.newWOs,
-        mergedGroup: [req.body.groupName]
+        mergedGroup: req.body.mergedGroup
     };
 
     const newBillRun = new BillRun(reqModel);
@@ -32,15 +30,17 @@ export const createBillRun  = async (req, res) => {
     try {
 
         await newBillRun.save();
-        const fetchActiveClients = await Client.find();
 
-        //todo: 
-             // add group obj on billrun model
-            // fetch on billruncandidates 
+        let getGrpIds = []
+        Object.keys(req.body.mergedGroup).forEach(key => {
+            getGrpIds.push(req.body.mergedGroup[key].id);
+        })
 
+        const fetchActiveClients = await Client.find({ group:{ $in: getGrpIds }});
 
-        //create a loop 
-        for(let x=0; x<fetchActiveClients.length; x++ ) {
+        console.log('RESPPP:::', fetchActiveClients);
+
+        for(let x = 0; x < fetchActiveClients.length; x++ ) {
             const newBillRunCandidate = new BillRunCandidate({
                 host: newBillRun._id,
                 client: fetchActiveClients[x]._id,
@@ -54,9 +54,6 @@ export const createBillRun  = async (req, res) => {
         }
 
         res.status(201).json(newBillRun);
-
-        // fetch all the active clients
-        // store it on billrunCandidate
 
     } catch (error) {
         res.status(404).json({ message: error.message });
