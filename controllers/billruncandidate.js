@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import BillRunCandidate from '../models/billruncandidate.js';
 
 const router = express.Router();
@@ -16,43 +15,19 @@ export const getBillrunCandidate = async (req, res) => {
 
 export const getBRCById = async (req, res) => { 
 
-    const hostId = req._id;
-     console.log('todayy-req: ', req.params);
+    const hostId = req.params.id;
 
    try {
 
-        const brc = await BillRunCandidate.find({ host: hostId  });
+        const brcs = await BillRunCandidate.find({ host: hostId  });
 
-        console.log('brc-find-resp: ', client);   
+        console.log('brc-find-resp: ', brcs.length);   
        
-       res.status(200).json(client);
+       res.status(200).json(brcs);
 
    } catch (error) {
        res.status(404).json({ message: error.message });
    }
-}
-
-
-
-export const createBillRunCandidate  = async (req, res) => {
-
-    // const billrun = req.body;
-    const temp = { 
-        billRun: "09-15-2021",
-        desc: "September 15, 2021",
-
-    };
-
-    const newBillRunCandidate = new BillRun(temp);
-    try {
-
-        await newBillRunCandidate.save();
-        res.status(201).json(newBillRunCandidate);
-
-    } catch (error) {
-        console.log('server-controller-client-catch-error: ', error);
-        res.status(404).json({ message: error.message });
-    }
 }
 
 export const updateBRC = async (req, res) => {
