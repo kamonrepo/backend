@@ -19,10 +19,7 @@ export const getBRCById = async (req, res) => {
 
    try {
 
-        const brcs = await BillRunCandidate.find({ host: hostId  });
-
-        console.log('brc-find-resp: ', brcs.length);   
-       
+       const brcs = await BillRunCandidate.find({ host: hostId  });
        res.status(200).json(brcs);
 
    } catch (error) {
