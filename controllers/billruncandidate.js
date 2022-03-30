@@ -28,11 +28,14 @@ export const getBRCById = async (req, res) => {
 }
 
 export const updateBRC = async (req, res) => {
-    console.log('SERVERRRR----updateBRC-REQ.BODY::: ', req.body);
-
-    for(let x in req.body) {
-        console.log('heyy::: ', req.body[x]);
-        await BillRunCandidate.findByIdAndUpdate(req.body[x], { status: 'PAID' });
+    if(req.body.isPaid == true){
+        for(let x in req.body.selectedIDs) {
+            await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: '---' });
+        }
+    } else {
+        for(let x in req.body.selectedIDs) {
+            await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: 'PAID' });
+        }
     }
 
     res.json({isSuccess: true});
