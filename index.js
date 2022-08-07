@@ -9,6 +9,8 @@ import groupRoutes from "./routes/group.js";
 import clientRoutes from "./routes/client.js";
 import billRunRoutes from "./routes/billrun.js";
 import billRunCanRoutes from "./routes/billruncandidate.js";
+import categoryRoutes from "././routes/services/category.js";
+import planRoutes from "././routes/services/plan.js";
 
 const app = express();
 
@@ -23,6 +25,8 @@ app.use('/group', groupRoutes);
 app.use('/client', clientRoutes);
 app.use('/billrun', billRunRoutes);
 app.use('/billruncandidate', billRunCanRoutes);
+app.use('/category', categoryRoutes);
+app.use('/plan', planRoutes);
 
 const server = http.createServer(app);
 

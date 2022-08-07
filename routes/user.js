@@ -7,6 +7,6 @@ import { signin, signup, updateUser, getUsers } from "../controllers/user.js";
 router.get('/', getUsers);
 router.post('/signin', signin);
 router.post('/signup', signup);
-router.patch('/profile/:id', auth, updateUser) 
+router.patch('/profile/:id', auth, updateUser);
 
 export default router;
