@@ -1,14 +1,25 @@
 import express from 'express';
 import Category from '../../models/services/category.js';
+import Plan from '../../models/services/plan.js';
 
 const router = express.Router();
 
 export const createCategory  = async (req, res) => {
 
+    console.log('reqreqreqreq::: ', req.body);
+    const category = new Category(req.body);
+
     try {
-        console.log('reqreqreqreq::: ', req.body);
-        const category = new Category(req.body);
+
         await category.save();
+
+        let newPlan = new Plan({
+            category: category._id,
+            plan: 'temp',
+            price: 'tempp'
+        })
+
+        await newPlan.save();
 
         res.status(200).json(category);
 

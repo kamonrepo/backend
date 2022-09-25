@@ -36,12 +36,12 @@ export const createBillRun  = async (req, res) => {
             getGrpIds.push(req.body.mergedGroup[key].id);
         })
 
-        const fetchActiveClients = await Client.find({ group:{ $in: getGrpIds }});
+        let fetchActiveClients = await Client.find({ group:{ $in: getGrpIds }});
 
-        console.log('RESPPP:::', fetchActiveClients);
+        console.log('fetchActiveClients-Merged-Group:::', fetchActiveClients);
 
         for(let x = 0; x < fetchActiveClients.length; x++ ) {
-            const newBillRunCandidate = new BillRunCandidate({
+            let newBillRunCandidate = new BillRunCandidate({
                 host: newBillRun._id,
                 client: fetchActiveClients[x]._id,
                 name: fetchActiveClients[x].name,

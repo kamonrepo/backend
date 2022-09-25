@@ -28,7 +28,7 @@ export const createPlan = async (req, res) => {
 
     } catch (error) {
 
-        console.log('errrr::: ', error.message);
+        console.log('createPlan-errrr::: ', error.message);
 
         res.status(404).json({ message: error.message });
     }
