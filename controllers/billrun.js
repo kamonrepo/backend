@@ -45,7 +45,8 @@ export const createBillRun  = async (req, res) => {
                 host: newBillRun._id,
                 client: fetchActiveClients[x]._id,
                 name: fetchActiveClients[x].name,
-                package: fetchActiveClients[x].package,
+                plan: fetchActiveClients[x].plan,
+                planName: fetchActiveClients[x].planName,
                 monthlyFee: fetchActiveClients[x].monthlyFee,
                 paymentInfo: '---',
                 status: '---'
@@ -56,6 +57,7 @@ export const createBillRun  = async (req, res) => {
         res.status(201).json(newBillRun);
 
     } catch (error) {
+        console.log('BillRunCandidate-error::: ', error.message);
         res.status(404).json({ message: error.message });
     }
 }

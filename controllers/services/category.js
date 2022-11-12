@@ -12,15 +12,12 @@ export const createCategory  = async (req, res) => {
     try {
 
         await category.save();
-
-        let newPlan = new Plan({
-            category: category._id,
-            plan: 'temp',
-            price: 'tempp'
-        })
-
-        await newPlan.save();
-
+        // let newPlan = new Plan({
+        //     category: category._id,
+        //     plan: 'temp',
+        //     price: 'tempp'
+        // })
+        // await newPlan.save();
         res.status(200).json(category);
 
     } catch (error) {
