@@ -1,27 +1,38 @@
 import express from 'express';
 import Category from '../../models/services/category.js';
-import Plan from '../../models/services/plan.js';
+import  mongoose  from "mongoose";
 
 const router = express.Router();
 
 export const createCategory  = async (req, res) => {
 
-    console.log('reqreqreqreq::: ', req.body);
-    const category = new Category(req.body);
-
     try {
+    console.log('createCategory-reqBodee::: ', req.body);
+    let typeParam = req.body.type;
 
-        await category.save();
-        // let newPlan = new Plan({
-        //     category: category._id,
-        //     plan: 'temp',
-        //     price: 'tempp'
-        // })
-        // await newPlan.save();
-        res.status(200).json(category);
+
+        if(typeParam == 'create') {
+            //create new
+            let newCategory = new Category({ category: req.body.service});
+            await newCategory.save();
+            console.log('new category saved::: ', newCategory);
+            res.status(200).json(newCategory);
+
+        } else {
+            //update existing 
+            let id = req.body.category;
+            let updatedService = {category: req.body.service};
+            if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No user with id: ${id}`);
+
+
+            let updatedCategory = await Category.findByIdAndUpdate(id, updatedService);
+            console.log('category updated::: ', updatedCategory);
+            await updatedCategory.save();
+            res.status(200).json(updatedCategory);
+        }
 
     } catch (error) {
-        console.log('errrr::: ', error.message);
+        console.log('createCategory-errrr::: ', error);
         res.status(404).json({ message: error.message });
     }
 }
