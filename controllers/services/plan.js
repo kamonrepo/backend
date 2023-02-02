@@ -16,6 +16,20 @@ export const getPlan = async (req, res) => {
 
 };
 
+export const getPlanByCategoryId = async (req, res) => { 
+
+    const categoryId = req.params.id;
+
+   try {
+
+       const plans = await Plan.find({ category: categoryId  });
+       res.status(200).json(plans);
+
+   } catch (error) {
+       res.status(404).json({ message: error.message });
+   }
+}
+
 
 export const createPlan = async (req, res) => {
 
