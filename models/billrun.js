@@ -5,6 +5,9 @@ const billRunSchema = mongoose.Schema({
     billRun: { type: String, required: true },
     mergedGroup: [],
     status: { type: String, default: 'Active'},
+    total: { type: String, default: '0' },
+    paid: { type: String, default: '0' },
+    unpaid: { type: String, default: '0' },
     createdAt: {
         type: Date,
         default: new Date()

@@ -1,5 +1,6 @@
 import express from 'express';
 import BillRunCandidate from '../models/billruncandidate.js';
+import BillRun from '../models/billrun.js';
 
 const router = express.Router();
 
@@ -28,14 +29,49 @@ export const getBRCById = async (req, res) => {
 }
 
 export const updateBRC = async (req, res) => {
+
     if(req.body.isPaid == true){
+
+        let totalPaid = 0;
         for(let x in req.body.selectedIDs) {
-            await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: '---' });
+            
+            // let executeUnpaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: '---' });
+            // console.log('executeUnpaid::: ', executeUnpaid);
+            // if BillRunCandidate is success; update billrun next
+            //apply the total upon billrun creation
+            //fetch total from billrun collection using brid
+            //fetch stauts of selectedIDs use as reference if paid/unpaid
+
+           console.log('updateBRC-unpaid-selectedIDs',req.body.selectedIDs[x]);
         }
     } else {
+
+        let computeAboutToPay = 0;
         for(let x in req.body.selectedIDs) {
-            await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: 'PAID' });
+            // let executePaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: 'PAID' });
+            // console.log('executePaid::: ', executePaid);
+
+            console.log('updateBRC-paid-selectedIDs',req.body.selectedIDs[x]);
+            console.log('updateBRC-paid-selectedMFs', req.body.selectedMFs[x]);
+
+            computeAboutToPay = computeAboutToPay + parseInt(req.body.selectedMFs[x]); 
+
         }
+
+        //fetch total from billrun collection using brid
+        const brMonthlyFee = await BillRun.find({ _id: req.body.selectedBr})
+
+        let currentTotal = brMonthlyFee.total;
+        let currentPaid = brMonthlyFee.paid;
+        let currentUnpaid = brMonthlyFee.unpaid;
+
+        //total = un
+         
+
+
+    
+
+
     }
 
     res.json({isSuccess: true});

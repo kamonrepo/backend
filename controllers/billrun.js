@@ -37,10 +37,12 @@ export const createBillRun  = async (req, res) => {
         })
 
         let fetchActiveClients = await Client.find({ group:{ $in: getGrpIds }});
-
-        console.log('fetchActiveClients-Merged-Group:::', fetchActiveClients);
+        let groupTotalMF = 0;
 
         for(let x = 0; x < fetchActiveClients.length; x++ ) {
+
+            groupTotalMF = groupTotalMF + parseInt(fetchActiveClients[x].monthlyFee); 
+
             let newBillRunCandidate = new BillRunCandidate({
                 host: newBillRun._id,
                 client: fetchActiveClients[x]._id,
@@ -54,10 +56,13 @@ export const createBillRun  = async (req, res) => {
             await newBillRunCandidate.save();
         }
 
+        let temp = await BillRun.findByIdAndUpdate(newBillRun._id, { total: groupTotalMF, unpaid: groupTotalMF });
+        console.log('groupTotalMF::: ', temp);
+
         res.status(201).json(newBillRun);
 
     } catch (error) {
-        console.log('BillRunCandidate-error::: ', error.message);
+        console.log('createBillRun-error::: ', error.message);
         res.status(404).json({ message: error.message });
     }
 }
