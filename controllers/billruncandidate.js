@@ -30,51 +30,70 @@ export const getBRCById = async (req, res) => {
 
 export const updateBRC = async (req, res) => {
 
-    if(req.body.isPaid == true){
+    if(req.body.isPaid == true){ // then update to unpaid
+        let computeAboutToUnpaid = 0;
 
-        let totalPaid = 0;
         for(let x in req.body.selectedIDs) {
-            
             // let executeUnpaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: '---' });
-            // console.log('executeUnpaid::: ', executeUnpaid);
-            // if BillRunCandidate is success; update billrun next
-            //apply the total upon billrun creation
-            //fetch total from billrun collection using brid
-            //fetch stauts of selectedIDs use as reference if paid/unpaid
 
-           console.log('updateBRC-unpaid-selectedIDs',req.body.selectedIDs[x]);
-        }
+            console.log('findByIdAndUpdate status to unpaid: ', req.body.selectedIDs[x]);
+
+            computeAboutToUnpaid = parseFloat(computeAboutToUnpaid) + parseFloat(req.body.selectedMFs[x]); 
+        }               
+                //fetch total from billrun collection using brid
+                const selectedBr = await BillRun.find({ _id: req.body.selectedBr });
+
+                let currentTotalUnpaid = parseFloat(selectedBr[0].unpaid); 
+                let currentTotalPaid = parseFloat(selectedBr[0].paid); 
+
+                let computeLatestTotalPaid = 0;
+                let computeLatestTotalUnpaid = 0;
+        
+                if(currentUnpaid !== 0) {
+        
+                    computeLatestTotalPaid = currentTotalPaid - computeAboutToUnpaid;
+                    computeLatestTotalUnpaid = currentTotalUnpaid + computeAboutToUnpaid;
+                }
+                
+                  let updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid });
+                  console.log('[unpaid]-billrun-model-update-resp::: ', updatedBr);        
     } else {
 
         let computeAboutToPay = 0;
+
         for(let x in req.body.selectedIDs) {
-            // let executePaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: 'PAID' });
-            // console.log('executePaid::: ', executePaid);
+             let executePaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: 'PAID' });
+             computeAboutToPay = parseFloat(computeAboutToPay) + parseFloat(req.body.selectedMFs[x]); 
+        }
 
-            console.log('updateBRC-paid-selectedIDs',req.body.selectedIDs[x]);
-            console.log('updateBRC-paid-selectedMFs', req.body.selectedMFs[x]);
+        //before the update of BillRun, get the existing value of fee's
+        const selectedBr = await BillRun.find({ _id: req.body.selectedBr });
 
-            computeAboutToPay = computeAboutToPay + parseInt(req.body.selectedMFs[x]); 
+        let currentTotal = parseFloat(selectedBr[0].total);
+        let currentPaid = parseFloat(selectedBr[0].paid); 
+        
+        let computeLatestPaid = 0;
+        let computeLatestUnpaid = 0;
+
+        if(currentPaid !== 0) {
+
+            computeLatestPaid = currentPaid + computeAboutToPay;
+            computeLatestUnpaid = currentTotal - computeLatestPaid;
+
+        } else if(currentPaid == 0){
+
+            computeLatestPaid = computeAboutToPay;
+            computeLatestUnpaid = currentTotal - computeLatestPaid;
+        } else {
 
         }
 
-        //fetch total from billrun collection using brid
-        const brMonthlyFee = await BillRun.find({ _id: req.body.selectedBr})
-
-        let currentTotal = brMonthlyFee.total;
-        let currentPaid = brMonthlyFee.paid;
-        let currentUnpaid = brMonthlyFee.unpaid;
-
-        //total = un
-         
-
-
-    
-
+         let updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestPaid, unpaid: computeLatestUnpaid });
+         console.log('[paid]-billrun-model-update-resp::: ', updatedBr);        
 
     }
 
-    res.json({isSuccess: true});
+    res.json({ isSuccess: true });
 }
 
 export default router;
