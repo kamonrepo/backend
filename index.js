@@ -40,7 +40,7 @@ const PORT = process.env.PORT || 4444;
 // mongoose.set('useFindAndModify', false);
 
 //local
-mongoose.connect('mongodb://localhost/igrey', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://127.0.0.1/igrey', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => server.listen(PORT,() => console.log(`Server Running on Port: http://localhost:${PORT}`)))
   .catch((error) => console.log(`${error} did not connect`));
 mongoose.set('useFindAndModify', false);

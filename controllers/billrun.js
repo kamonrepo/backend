@@ -57,7 +57,6 @@ export const createBillRun  = async (req, res) => {
         }
 
         let temp = await BillRun.findByIdAndUpdate(newBillRun._id, { total: groupTotalMF, unpaid: groupTotalMF });
-        console.log('groupTotalMF::: ', temp);
 
         res.status(201).json(newBillRun);
 
