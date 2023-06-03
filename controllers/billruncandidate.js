@@ -55,24 +55,30 @@ export const updateBRC = async (req, res) => {
                 console.log('currentTotalPaid::: ', currentTotalPaid);
                 console.log('************************************');
           
-
                 let computeLatestTotalPaid = 0;
                 let computeLatestTotalUnpaid = 0;
         
                 if(currentTotalUnpaid >= 0) {
-                    console.log('currentTotalUnpaid*** ', currentTotalUnpaid);
-                    if(currentTotalPaid >= 0 && currentTotalPaid < 0) {
-                        computeLatestTotalPaid = currentTotalPaid - computeAboutToUnpaid;
-                        computeLatestTotalUnpaid = currentTotalUnpaid + computeAboutToUnpaid;
+                    console.log('[UNPAID]-currentTotalUnpaid*** ', currentTotalUnpaid);
+                    if(currentTotalPaid >= 0) {
+                        console.log('[UNPAID]-currentTotalPaid**** ', currentTotalPaid);
+                        computeLatestTotalPaid = parseFloat(currentTotalPaid) - parseFloat(computeAboutToUnpaid);
+                        computeLatestTotalUnpaid = parseFloat(currentTotalUnpaid) + parseFloat(computeAboutToUnpaid);
                     }
                 } 
 
                 console.log('\n');     
-                console.log('computeLatestTotalPaid::: ', computeLatestTotalPaid);    
-                console.log('UNPAID-UNPAID-UNPAID-computeLatestTotalUnpaid::: ', computeLatestTotalUnpaid);   
+                console.log(`[UNPAID]-computeLatestTotalPaid: ${currentTotalPaid} -  ${computeAboutToUnpaid} = ${computeLatestTotalPaid}`);   
+                console.log('[UNPAID]-computeLatestTotalPaid::: ', computeLatestTotalPaid);   
                 console.log('\n');
-                console.log('BillRun.findByIdAndUpdate::: ', { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid == 0 ? currentTotal : computeLatestTotalUnpaid});     
-                updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid == 0 ? currentTotal : computeLatestTotalUnpaid });
+                console.log(`[UNPAID]-computeLatestTotalUnPaid: ${currentTotalUnpaid} +  ${computeAboutToUnpaid} = ${computeLatestTotalUnpaid}`);    
+                console.log('[UNPAID]-computeLatestTotalUnPaid-typeof::: ', typeof(computeLatestTotalUnpaid));   
+                console.log('[UNPAID]-computeLatestTotalUnPaid::: ', computeLatestTotalUnpaid);   
+                console.log('[UNPAID]-BillRun.findByIdAndUpdate::: ', { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid });     
+
+                updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid });
+                // console.log('[UNPAID]-BillRun.findByIdAndUpdate::: ', { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid == 0 ? currentTotal : computeLatestTotalUnpaid});     
+                // updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid == 0 ? currentTotal : computeLatestTotalUnpaid });
 
     } else { //update to PAID
         console.log('************************************PAID-PAID-PAID');
@@ -102,24 +108,26 @@ export const updateBRC = async (req, res) => {
 
         if(currentPaid != 0) {
             console.log('currentPaid != 0 ::: ', currentPaid);
-            computeLatestPaid = currentPaid + computeAboutToPay;
-            computeLatestUnpaid = currentUnpaid - computeLatestPaid;
+            computeLatestPaid = parseFloat(currentPaid) + parseFloat(computeAboutToPay);
+            computeLatestUnpaid = parseFloat(currentUnpaid) - parseFloat(computeAboutToPay);
         } 
         
-     if(currentPaid == 0){
-        console.log('currentPaid == 0 ::: ', currentPaid);
-            computeLatestPaid = computeAboutToPay;
-            computeLatestUnpaid = currentUnpaid - computeLatestPaid;
-
-
+        if(currentPaid == 0){
+            console.log('currentPaid == 0 ::: ', currentPaid);
+                computeLatestPaid = computeAboutToPay;
+                computeLatestUnpaid = parseFloat(currentUnpaid) - parseFloat(computeLatestPaid);
         } 
 
         console.log('\n');
-        console.log('PAID-PAID-PAID-computeLatestUnpaid ::: ', computeLatestUnpaid);
-        console.log('await BillRun.findByIdAndUpdate',  { paid: computeLatestPaid, unpaid: computeLatestUnpaid == 0 ? currentTotal : computeLatestUnpaid });
-        updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestPaid, unpaid: computeLatestUnpaid == 0 ? currentTotal : computeLatestUnpaid });
-        //  console.log('[paid]-billrun-model-update-resp::: ', updatedBr);        
+        console.log(`[PAID]-computeLatestPaid: ${computeAboutToPay}`);   
+        console.log('\n');
+        console.log(`[PAID]-computeLatestUnPaid: ${currentUnpaid} -  ${computeLatestPaid} = ${computeLatestUnpaid}`);  
+        console.log('[PAID]-computeLatestUnPaid::: ', computeLatestUnpaid);   
+        console.log('[PAID]-await BillRun.findByIdAndUpdate',  { paid: computeLatestPaid, unpaid: computeLatestUnpaid  });
+        updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestPaid, unpaid: computeLatestUnpaid });
 
+        // console.log('[PAID]-await BillRun.findByIdAndUpdate',  { paid: computeLatestPaid, unpaid: computeLatestUnpaid == 0 ? currentTotal : computeLatestUnpaid });
+        // updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestPaid, unpaid: computeLatestUnpaid == 0 ? currentTotal : computeLatestUnpaid });
     }
 
     res.json(updatedBr);
