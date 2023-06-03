@@ -38,7 +38,7 @@ export const updateBRC = async (req, res) => {
 
         for(let x in req.body.selectedIDs) {
             
-            //   let executeUnpaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: '---' });
+              let executeUnpaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: '---' });
               computeAboutToUnpaid = parseFloat(computeAboutToUnpaid) + parseFloat(req.body.selectedMFs[x]); 
         }               
                 //fetch total from billrun collection using brid
@@ -61,23 +61,18 @@ export const updateBRC = async (req, res) => {
         
                 if(currentTotalUnpaid >= 0) {
                     console.log('currentTotalUnpaid*** ', currentTotalUnpaid);
-                    if(currentTotalPaid >= 0) {
+                    if(currentTotalPaid >= 0 && currentTotalPaid < 0) {
                         computeLatestTotalPaid = currentTotalPaid - computeAboutToUnpaid;
                         computeLatestTotalUnpaid = currentTotalUnpaid + computeAboutToUnpaid;
                     }
                 } 
 
-                // if(currentTotalUnpaid == 0) {
-                //     console.log('currentTotalUnpaid*** ', currentTotalUnpaid);
-                //     computeLatestTotalPaid = currentTotalPaid + computeAboutToUnpaid;
-                //     computeLatestTotalUnpaid = currentTotalUnpaid - computeAboutToUnpaid;                    
-                // }
                 console.log('\n');     
-                console.log('computeLatestTotalPaid::: ',computeLatestTotalPaid);    
-                console.log('computeLatestTotalUnpaid::: ',computeLatestTotalUnpaid);   
-                console.log('\n');             
-                console.log('BillRun.findByIdAndUpdate::: ', { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid });     
-        // updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid });
+                console.log('computeLatestTotalPaid::: ', computeLatestTotalPaid);    
+                console.log('UNPAID-UNPAID-UNPAID-computeLatestTotalUnpaid::: ', computeLatestTotalUnpaid);   
+                console.log('\n');
+                console.log('BillRun.findByIdAndUpdate::: ', { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid == 0 ? currentTotal : computeLatestTotalUnpaid});     
+                updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid == 0 ? currentTotal : computeLatestTotalUnpaid });
 
     } else { //update to PAID
         console.log('************************************PAID-PAID-PAID');
@@ -95,8 +90,6 @@ export const updateBRC = async (req, res) => {
         let currentPaid = parseFloat(selectedBr[0].paid); 
         let currentUnpaid = parseFloat(selectedBr[0].unpaid); 
 
-        console.log('\n');     
-        console.log('\n');     
         console.log('************************************');
         console.log('***AboutToPay::: ', computeAboutToPay);
         console.log('currentTotal::: ', currentTotal);
@@ -121,9 +114,10 @@ export const updateBRC = async (req, res) => {
 
         } 
 
-        console.log('\n');     
-        console.log('await BillRun.findByIdAndUpdate',  { paid: computeLatestPaid, unpaid: computeLatestUnpaid });
-        updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestPaid, unpaid: computeLatestUnpaid });
+        console.log('\n');
+        console.log('PAID-PAID-PAID-computeLatestUnpaid ::: ', computeLatestUnpaid);
+        console.log('await BillRun.findByIdAndUpdate',  { paid: computeLatestPaid, unpaid: computeLatestUnpaid == 0 ? currentTotal : computeLatestUnpaid });
+        updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestPaid, unpaid: computeLatestUnpaid == 0 ? currentTotal : computeLatestUnpaid });
         //  console.log('[paid]-billrun-model-update-resp::: ', updatedBr);        
 
     }
