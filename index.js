@@ -11,6 +11,7 @@ import billRunRoutes from "./routes/billrun.js";
 import billRunCanRoutes from "./routes/billruncandidate.js";
 import categoryRoutes from "././routes/services/category.js";
 import planRoutes from "././routes/services/plan.js";
+import reportRoutes from "././routes/report/index.js";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/billrun', billRunRoutes);
 app.use('/billruncandidate', billRunCanRoutes);
 app.use('/category', categoryRoutes);
 app.use('/plan', planRoutes);
+app.use('/report', reportRoutes);
 
 const server = http.createServer(app);
 
