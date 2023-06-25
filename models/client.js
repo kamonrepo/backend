@@ -6,6 +6,7 @@ const clientSchema = mongoose.Schema({
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'categories'},
     plan: { type: mongoose.Schema.Types.ObjectId, ref: 'plans'},
     planName: {type: String, required: true }       ,
+    ipaddr: {type: String, required: true }         ,
     dueDate: {type: String, required: true }        ,
     monthlyFee: { type: String, required: true }    ,
     address: { type: String, required: true }       ,
