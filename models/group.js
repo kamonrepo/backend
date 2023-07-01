@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 
 const groupSchema = mongoose.Schema({
     name: { type: String, required: true },
-    members: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'client'
+    subloc: {
+        type: [mongoose.Schema.Types.Mixed],
+        default: []
     },
     createdAt: {
         type: Date,
