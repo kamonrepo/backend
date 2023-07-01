@@ -1,5 +1,7 @@
 import express from 'express';
 import Group from '../models/group.js';
+import Sublocation from '../models/sublocation.js';
+import Targetlocation from '../models/targetlocation.js';
 
 const router = express.Router();
 
@@ -20,31 +22,22 @@ export const createGroup  = async (req, res) => {
 }
 
 export const createSubloc = async (req, res) => {
+  
+    const sublocation = req.body;
+    //const newSublocation = new Sublocation(sublocation);
 
     try {
 
-        console.log('back-createSubloc', req.body);
-         const group = await Group.findById(req.body.groupId);
-         console.log('back-createSubloc--group', group);
+         console.log('createSubloc-sublocation-req::: ', sublocation);
+         //await newSublocation.save();
+        //  res.status(200).json(newSublocation);
+         res.status(200).json({ temp: 'test'});
 
-         const index = group.subloc.findIndex(data => data === req.body.groupId);
-         console.log('back-createSubloc--index', index);
-
-        if (index === -1) {
-          
-        } else {
-         
-            //already exist
-          
-        }
-        // const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
-    
-         res.status(200).json({ k: true});
 
     } catch (error) {
-        // console.log('catch-createSubloc: ', error);
-        // res.status(404).json({ message: error.message });
-        res.status(404).json({});
+
+        console.log('catch-createSubloc: ', error);
+        res.status(404).json({ message: error.message });
     }
 }
 

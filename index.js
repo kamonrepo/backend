@@ -4,7 +4,6 @@ import cors from 'cors';
 import http from 'http';
 import bodyParser from 'body-parser';
 import userRoutes from "./routes/user.js";
-import locationRoutes from "./routes/location.js";
 import groupRoutes from "./routes/group.js";
 import clientRoutes from "./routes/client.js";
 import billRunRoutes from "./routes/billrun.js";
@@ -21,7 +20,6 @@ app.use(bodyParser.json({ limit: '30mb', extended: true }))
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }))
 
 app.use('/users', userRoutes);
-app.use('/location', locationRoutes);
 app.use('/group', groupRoutes);
 app.use('/client', clientRoutes);
 app.use('/billrun', billRunRoutes);
