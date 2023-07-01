@@ -5,11 +5,35 @@ import Targetlocation from '../models/targetlocation.js';
 
 const router = express.Router();
 
+
+export const getGroups = async (req, res) => {
+    try {
+        const getAllGroups = await Group.find();
+  
+        res.status(200).json(getAllGroups);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+export const getSublocs  = async (req, res) => {
+
+    try {
+        const getAllSublocs = await Sublocation.find();
+        res.status(200).json(getAllSublocs);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+
 export const createGroup  = async (req, res) => {
 
     const group = req.body;
 
+    console.log('createGroup-group-req: ', group);
     const newGroup = new Group(group);
+
     try {
 
         await newGroup.save();
@@ -24,31 +48,35 @@ export const createGroup  = async (req, res) => {
 export const createSubloc = async (req, res) => {
   
     const sublocation = req.body;
-    //const newSublocation = new Sublocation(sublocation);
+    console.log('createSubloc-sublocation-req::: ', sublocation);
+    const newSublocation = new Sublocation(sublocation);
 
     try {
+         await newSublocation.save();
 
-         console.log('createSubloc-sublocation-req::: ', sublocation);
-         //await newSublocation.save();
-        //  res.status(200).json(newSublocation);
-         res.status(200).json({ temp: 'test'});
-
+         res.status(200).json(newSublocation);
 
     } catch (error) {
-
         console.log('catch-createSubloc: ', error);
         res.status(404).json({ message: error.message });
     }
 }
 
-export const getGroups = async (req, res) => {
-    try {
-        const getAllGroups = await Group.find();
+export const createTargetLoc = async (req, res) => {
   
-        res.status(200).json(getAllGroups);
+    const sublocation = req.body;
+    console.log('createSubloc-sublocation-req::: ', sublocation);
+    const newSublocation = new Sublocation(sublocation);
+
+    try {
+         await newSublocation.save();
+
+         res.status(200).json(newSublocation);
+
     } catch (error) {
+        console.log('catch-createSubloc: ', error);
         res.status(404).json({ message: error.message });
     }
-  }
+}
 
 export default router;
