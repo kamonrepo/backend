@@ -36,7 +36,7 @@ export const createBillRun  = async (req, res) => {
             getGrpIds.push(req.body.mergedGroup[key].id);
         })
 
-        let fetchActiveClients = await Client.find({ group:{ $in: getGrpIds }});
+        let fetchActiveClients = await Client.find({ group:{ $in: getGrpIds }}); //and status is active
         let groupTotalMF = 0;
 
         for(let x = 0; x < fetchActiveClients.length; x++ ) {
