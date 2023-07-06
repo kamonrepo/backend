@@ -64,17 +64,17 @@ export const createSubloc = async (req, res) => {
 
 export const createTargetLoc = async (req, res) => {
   
-    const sublocation = req.body;
-    console.log('createSubloc-sublocation-req::: ', sublocation);
-    const newSublocation = new Sublocation(sublocation);
+    const targetloc = req.body;
+    console.log('createTargetLoc-targetloc-req::: ', targetloc);
+    const newTargetlocation = new Targetlocation(targetloc);
 
     try {
-         await newSublocation.save();
+         await newTargetlocation.save();
 
-         res.status(200).json(newSublocation);
+         res.status(200).json(newTargetlocation);
 
     } catch (error) {
-        console.log('catch-createSubloc: ', error);
+        console.log('catch-createTargetLoc: ', error);
         res.status(404).json({ message: error.message });
     }
 }
