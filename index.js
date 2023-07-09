@@ -31,7 +31,7 @@ app.use('/report', reportRoutes);
 const server = http.createServer(app);
 
 const CONNECTION_URL = 'mongodb+srv://kamonrara:kamonrara@cluster0.2vltm.mongodb.net/igreyconnect?retryWrites=true&w=majority';
-const PORT = process.env.PORT || 4444;
+const PORT = process.env.MARVINPOGI || 4444;
 
 //cloud 
 // mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })

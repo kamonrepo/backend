@@ -25,6 +25,7 @@ export const createBillRun  = async (req, res) => {
         mergedGroup: req.body.mergedGroup
     };
 
+    console.log('createBillRun-reqModel::: ', reqModel);
     const newBillRun = new BillRun(reqModel);
 
     try {

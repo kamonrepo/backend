@@ -2,6 +2,7 @@ import express from 'express';
 import Group from '../models/group.js';
 import Sublocation from '../models/sublocation.js';
 import Targetlocation from '../models/targetlocation.js';
+import BillRun from '../models/billrun.js';
 
 const router = express.Router();
 
@@ -68,10 +69,30 @@ export const createTargetLoc = async (req, res) => {
     console.log('createTargetLoc-targetloc-req::: ', targetloc);
     const newTargetlocation = new Targetlocation(targetloc);
 
-    try {
-         await newTargetlocation.save();
+    //if targetloc ceration is success then create bill run. nad use the newly created targetloc id
 
-         res.status(200).json(newTargetlocation);
+    try {
+
+        await newTargetlocation.save();
+        if(newTargetlocation) {
+            
+            const tempd = new Date();
+            const random =  tempd.getMilliseconds() + '-' + tempd.getMilliseconds();
+            let uniqueId =  random + '-' + targetloc.name;
+
+            let payload = { billRun: uniqueId }
+            let buildMergedGroup = [];
+
+            buildMergedGroup.push({id:  newTargetlocation._id, name: targetloc.name});
+
+            Object.assign(payload, { mergedGroup: buildMergedGroup,  total: 0, paid: 0, unpaid: 0 });
+
+            let newBillRun = new BillRun(payload);
+            await newBillRun.save();
+
+        } 
+
+        res.status(200).json(newTargetlocation);
 
     } catch (error) {
         console.log('catch-createTargetLoc: ', error);

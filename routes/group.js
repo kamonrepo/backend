@@ -4,10 +4,11 @@ import { createGroup, getGroups, getSublocs, createSubloc, createTargetLoc } fro
 
 const router = express.Router();
 
-router.post('/', createGroup);
-router.post('/subloc', createSubloc);
 router.get('/', getGroups);
 router.get('/get/sublocs', getSublocs);
+
+router.post('/', createGroup);
+router.post('/subloc', createSubloc);
 router.post('/targetloc', createTargetLoc);
 
 export default router;
