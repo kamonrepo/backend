@@ -27,6 +27,16 @@ export const getSublocs  = async (req, res) => {
     }
 }
 
+export const getTargetlocs  = async (req, res) => {
+
+    try {
+        const getAllTargetlocs = await Targetlocation.find();
+        res.status(200).json(getAllTargetlocs);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
 
 export const createGroup  = async (req, res) => {
 
