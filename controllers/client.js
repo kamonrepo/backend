@@ -1,5 +1,6 @@
 import express from 'express';
 import Client from '../models/client.js';
+import BillRunCandidate from '../models/billruncandidate.js';
 
 const router = express.Router();
 
@@ -11,6 +12,22 @@ export const createClient  = async (req, res) => {
     try {
 
         await newClient.save();
+
+
+        let newBillRunCandidate = new BillRunCandidate({
+            host: '',
+            client: 'fetchActiveClients[x]._id',
+            name: 'fetchActiveClients[x].name',
+            plan: 'fetchActiveClients[x].plan',
+            planName: 'fetchActiveClients[x].planName',
+            monthlyFee: 'fetchActiveClients[x].monthlyFee',
+            paymentInfo: '---',
+            status: '---'
+    });
+        await newBillRunCandidate.save();
+
+
+        
         res.status(201).json(newClient);
 
     } catch (error) {
