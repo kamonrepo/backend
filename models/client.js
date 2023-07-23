@@ -11,8 +11,6 @@ const clientSchema = mongoose.Schema({
     monthlyFee: { type: String, required: true },
     address: { type: String, required: true },
     status: { type: String, default: 'Active'},
-    group: { type: mongoose.Schema.Types.ObjectId, ref: 'groups'},
-    sublocId: { type: mongoose.Schema.Types.ObjectId, ref: 'sublocations'},
     targetlocId: { type: mongoose.Schema.Types.ObjectId, ref: 'targetlocations'},
     createdAt: {
         type: Date,

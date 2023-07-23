@@ -86,11 +86,7 @@ export const createTargetLoc = async (req, res) => {
         await newTargetlocation.save();
         if(newTargetlocation) {
             
-            const tempd = new Date();
-            const random =  tempd.getMilliseconds() + '-' + tempd.getMilliseconds();
-            let uniqueId =  random + '-' + targetloc.name;
-
-            let payload = { billRun: uniqueId }
+            let payload = { billRun: targetloc.name, targetlocId: newTargetlocation._id };
             let buildMergedGroup = [];
 
             buildMergedGroup.push({id:  newTargetlocation._id, name: targetloc.name});

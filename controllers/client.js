@@ -1,6 +1,7 @@
 import express from 'express';
 import Client from '../models/client.js';
 import BillRunCandidate from '../models/billruncandidate.js';
+import BillRun from '../models/billrun.js';
 
 const router = express.Router();
 
@@ -13,21 +14,25 @@ export const createClient  = async (req, res) => {
 
         await newClient.save();
 
+        let fetchBr = await BillRun.find({ targetlocId: client.targetlocId });
+        let bridHost = fetchBr[0]._id;
 
         let newBillRunCandidate = new BillRunCandidate({
-            host: '',
-            client: 'fetchActiveClients[x]._id',
-            name: 'fetchActiveClients[x].name',
-            plan: 'fetchActiveClients[x].plan',
-            planName: 'fetchActiveClients[x].planName',
-            monthlyFee: 'fetchActiveClients[x].monthlyFee',
+            host: bridHost,
+            client: newClient._id,
+            name: client.name,
+            plan: client.plan,
+            planName: client.planName,
+            monthlyFee: client.monthlyFee,
             paymentInfo: '---',
             status: '---'
     });
         await newBillRunCandidate.save();
 
+        if(newBillRunCandidate) {
+            console.log('newBillRunCandidate has been save: ', newBillRunCandidate);
+        }
 
-        
         res.status(201).json(newClient);
 
     } catch (error) {
