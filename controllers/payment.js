@@ -9,10 +9,13 @@ export const updatePayment = async (req, res) => {
 
     if(req.body.isPaid == true){ // then update to UNPAID
         console.log('updatePayment-UNPAID-req.body: ', req.body);
-
+      
         //new-->
+        let brid = req.body.selectedBr;
         
-        //new --|
+        let isPaymentExists = Payment.find({ billrun: req.body.selectedBr});
+        console.log('isPaymentExists: ', isPaymentExists);
+        // console.log('updatePayment-isPaymentExists: ', isPaymentExists);
             
         //       let executeUnpaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: '---' });
 
