@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const billRunSchema = mongoose.Schema({
 
-    billRun: { type: String, required: true }, //targetloc
+    billRun: { type: String, required: true }, 
     targetlocId: { type: String, required: true }, //targetlocId
     mergedGroup: [],
     status: { type: String, default: 'Active'},
