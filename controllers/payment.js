@@ -1,52 +1,18 @@
 import express from 'express';
-import BillRunCandidate from '../models/billruncandidate.js';
-import BillRun from '../models/billrun.js';
 import Payment from '../models/payment.js';
 
 const router = express.Router();
 
-export const getBillrunCandidate = async (req, res) => {
-    try {
-        const getAllBillRunCan = await BillRunCandidate.find();
-  
-        res.status(200).json(getAllBillRunCan);
-    } catch (error) {
-        res.status(404).json({ message: error.message });
-    }
-};
-
-export const getBRCById = async (req, res) => { 
-
-    const hostId = req.params.id;
-
-   try {
-
-       const brcs = await BillRunCandidate.find({ host: hostId  });
-       res.status(200).json(brcs);
-
-   } catch (error) {
-       res.status(404).json({ message: error.message });
-   }
-}
-
-export const updateBRC = async (req, res) => {
+export const updatePayment = async (req, res) => {
 
     let updatedBr = null;
 
     if(req.body.isPaid == true){ // then update to UNPAID
-        console.log('updateBRC-UNPAID-req.body: ', req.body);
-
+        console.log('updatePayment-UNPAID-req.body: ', req.body);
 
         //new-->
         
-
-
         //new --|
-
-        let computeAboutToUnpaid = 0;
-        let updatedBrUNPAID = null;
-
-        // for(let x in req.body.selectedIDs) {
             
         //       let executeUnpaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: '---' });
 
@@ -96,12 +62,8 @@ export const updateBRC = async (req, res) => {
                 // updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid == 0 ? currentTotal : computeLatestTotalUnpaid });
 
     } else { //update to PAID
-        console.log('updateBRC-PAID-req.body: ', req.body);
+        console.log('updatePayment-PAID-req.body: ', req.body);
 
-        let updatedBrPAID = null;
-        let computeAboutToPay = 0;
-
-        // for(let x in req.body.selectedIDs) {
         //       let executePaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: 'PAID' });
         //      computeAboutToPay = parseFloat(computeAboutToPay) + parseFloat(req.body.selectedMFs[x]); 
         // }
@@ -149,54 +111,36 @@ export const updateBRC = async (req, res) => {
 
     res.json(updatedBr);
 }
-
-export const createDefaultBRC  = async (req, res) => {
-
-    const reqModel = { 
-        billRun:  req.body.newWOs,
-        mergedGroup: req.body.mergedGroup
-    };
-
-    console.log('createBillRun-reqModel::: ', reqModel);
-    const newBillRun = new BillRun(reqModel);
-
+export const getPayments = async (req, res) => {
     try {
 
-        await newBillRun.save();
-
-        let getGrpIds = []
-        Object.keys(req.body.mergedGroup).forEach(key => {
-            getGrpIds.push(req.body.mergedGroup[key].id);
-        })
-
-        let fetchActiveClients = await Client.find({ group:{ $in: getGrpIds }}); //and status is active
-        let groupTotalMF = 0;
-
-        for(let x = 0; x < fetchActiveClients.length; x++ ) {
-
-            groupTotalMF = groupTotalMF + parseInt(fetchActiveClients[x].monthlyFee); 
-
-            let newBillRunCandidate = new BillRunCandidate({
-                host: newBillRun._id,
-                client: fetchActiveClients[x]._id,
-                name: fetchActiveClients[x].name,
-                plan: fetchActiveClients[x].plan,
-                planName: fetchActiveClients[x].planName,
-                monthlyFee: fetchActiveClients[x].monthlyFee,
-                paymentInfo: '---',
-                status: '---'
-        });
-            await newBillRunCandidate.save();
-        }
-
-        let temp = await BillRun.findByIdAndUpdate(newBillRun._id, { total: groupTotalMF, unpaid: groupTotalMF });
-
-        res.status(201).json(newBillRun);
+        const getAllPayments = await Payment.find();
+  
+        res.status(200).json(getAllPayments);
 
     } catch (error) {
-        console.log('createBillRun-error::: ', error.message);
+
         res.status(404).json({ message: error.message });
     }
 }
+
+export const createPayment  = async (req, res) => {
+
+    const payment = req.body;
+
+    console.log('createGroup-payment-req: ', payment);
+    const newPayment = new Payment(payment);
+
+    try {
+
+        await newPayment.save();
+        res.status(201).json(newPayment);
+
+    } catch (error) {
+        console.log('server-controller-payment-catch-error: ', error);
+        res.status(404).json({ message: error.message });
+    }
+}
+
 
 export default router;
