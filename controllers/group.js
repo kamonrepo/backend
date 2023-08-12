@@ -95,7 +95,6 @@ export const createTargetLoc = async (req, res) => {
 
             let newBillRun = new BillRun(payload);
             await newBillRun.save();
-
         } 
 
         res.status(200).json(newTargetlocation);

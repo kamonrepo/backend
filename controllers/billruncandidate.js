@@ -34,7 +34,7 @@ export const updateBRC = async (req, res) => {
     let updatedBr = null;
 
     if(req.body.isPaid == true){ // then update to UNPAID
-        console.log('updateBRC-UNPAID-req.body: ', req.body);
+       // console.log('updateBRC-UNPAID-req.body: ', req.body);
 
 
         //new-->
