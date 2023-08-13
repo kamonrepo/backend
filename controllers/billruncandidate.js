@@ -183,7 +183,8 @@ export const createDefaultBRC  = async (req, res) => {
                 plan: fetchActiveClients[x].plan,
                 planName: fetchActiveClients[x].planName,
                 monthlyFee: fetchActiveClients[x].monthlyFee,
-                paymentInfo: '---',
+                dueDate: fetchActiveClients[x].dueDate,
+                paymentDate: new Date(),
                 status: '---'
         });
             await newBillRunCandidate.save();
