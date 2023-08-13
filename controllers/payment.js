@@ -4,6 +4,26 @@ import AccumulatedPayment from '../models/accumulatedpayment.js';
 
 const router = express.Router();
 
+function determineMonthPeriod(currentDate) {
+
+    // First day of the current month
+    let firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    // 15th day of the current month
+    let fifteenthDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 15);
+    // 16th day of the current month
+    let sixteenthDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 16);
+    // End day of the current month (last day of the next month minus one day)
+    let endDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+    if (currentDate >= firstDayOfMonth && currentDate <= fifteenthDayOfMonth) {
+        return '15th';
+    } else if (currentDate >= sixteenthDayOfMonth && currentDate <= endDayOfMonth) {
+        return 'Endth';
+    } else {
+        return 'unknown_period';
+    }
+}
+
 export const updatePayment = async (req, res) => {
 
     let updatedBr = null;
@@ -17,115 +37,18 @@ export const updatePayment = async (req, res) => {
         console.log('updatePayment-selectedBr: ', typeof(_selectedBr));
         console.log('updatePayment-selectedBr-length: ', _selectedBr.length);
 
-
-        // let currentTotal = parseFloat(selectedBr[0].total);
-        
-        // let paymentExists = Payment.findById(brid, async (err, document) => {
-
-        //     if (err) {
-        //       console.error('An error occurred:', err);
-        //     } else if (document) {
-        //       console.log('Document found:', document);
-        //     } else {
-        //       console.log('Payment I not found, create new::: ', req.body);
-
-        //     //   const paymentSchema = mongoose.Schema({
-        //     //     billrun: { type: mongoose.Schema.Types.ObjectId, ref: 'billruns'},
-        //     //     total: { type: String, default: '0' },
-        //     //     paid: { type: String, default: '0' },
-        //     //     unpaid: { type: String, default: '0' },
-        //     //     status: { type: String },
-        //     //     createdAt: {
-        //     //         type: Date,
-        //     //         default: new Date()
-        //     //     }
-        //     // })
-
-        //     // let paymentPayload = { 
-        //     //     billrun: brid,
-              
-        //     // }
-
-        //     // const newPayment = new Payment(paymentPayload);
-            
-        //     // try {
-
-        //     //     await newPayment.save();
-        //     //     res.status(200).json(newPayment);
-        
-        //     // } catch (error) {
-        //     //     console.log('catch-createPayment: ', error);
-        //     //     res.status(404).json({ message: error.message });
-        //     // }
-
-
-        //     }
-        //   });
-
-          //console.log('paymentExists::: ', paymentExists);
-
-        // console.log('isPaymentExists: ', isPaymentExists);
-       // console.log('updatePayment-brid: ', brid);
-        // console.log('updatePayment-isPaymentExists: ', isPaymentExists);
-            
-        //       let executeUnpaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: '---' });
-
-        //       if(executeUnpaid){
-        //         computeAboutToUnpaid = parseFloat(computeAboutToUnpaid) + parseFloat(req.body.selectedMFs[x]); 
-        //       }
-              
-        // }               
-        //         //fetch total from billrun collection using brid
-        //         const selectedBr = await BillRun.find({ _id: req.body.selectedBr });
-
-        //         let currentTotal = parseFloat(selectedBr[0].total);
-        //         let currentTotalUnpaid = parseFloat(selectedBr[0].unpaid); 
-        //         let currentTotalPaid = parseFloat(selectedBr[0].paid); 
-
-        //         console.log('************************************');
-        //         console.log('***AboutToUnpaid::: ', computeAboutToUnpaid);
-        //         console.log('currentTotal::: ', currentTotal);
-        //         console.log('currentTotalUnpaid::: ', currentTotalUnpaid);
-        //         console.log('currentTotalPaid::: ', currentTotalPaid);
-        //         console.log('************************************');
-          
-        //         let computeLatestTotalPaid = 0;
-        //         let computeLatestTotalUnpaid = 0;
-        
-        //         if(currentTotalUnpaid >= 0) {
-        //             console.log('[UNPAID]-currentTotalUnpaid*** ', currentTotalUnpaid);
-        //             if(currentTotalPaid >= 0) {
-        //                 console.log('[UNPAID]-currentTotalPaid**** ', currentTotalPaid);
-        //                 computeLatestTotalPaid = parseFloat(currentTotalPaid) - parseFloat(computeAboutToUnpaid);
-        //                 computeLatestTotalUnpaid = parseFloat(currentTotalUnpaid) + parseFloat(computeAboutToUnpaid);
-        //             }
-        //         } 
-
-        //         console.log('\n');     
-        //         console.log(`[UNPAID]-computeLatestTotalPaid: ${currentTotalPaid} -  ${computeAboutToUnpaid} = ${computeLatestTotalPaid}`);   
-        //         console.log('[UNPAID]-computeLatestTotalPaid::: ', computeLatestTotalPaid);   
-        //         console.log('\n');
-        //         console.log(`[UNPAID]-computeLatestTotalUnPaid: ${currentTotalUnpaid} +  ${computeAboutToUnpaid} = ${computeLatestTotalUnpaid}`);    
-        //         console.log('[UNPAID]-computeLatestTotalUnPaid-typeof::: ', typeof(computeLatestTotalUnpaid));   
-        //         console.log('[UNPAID]-computeLatestTotalUnPaid::: ', computeLatestTotalUnpaid);   
-        //         console.log('[UNPAID]-BillRun.findByIdAndUpdate::: ', { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid });     
-
-        //         updatedBrUNPAID =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid });
-        //         updatedBr = updatedBrUNPAID;
-                // console.log('[UNPAID]-BillRun.findByIdAndUpdate::: ', { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid == 0 ? currentTotal : computeLatestTotalUnpaid});     
-                // updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestTotalPaid, unpaid: computeLatestTotalUnpaid == 0 ? currentTotal : computeLatestTotalUnpaid });
-
     } else { 
         
         // update to PAID
         console.log('updatePayment-PAID-req.body: ', req.body);
 
         let brid = req.body.selectedBr;
+        let brcId = req.body.selectedIDs[0];
         let totP = req.body.selectedMFs[0];
         let clientId = req.body.selectedBRCClient;
+        let determinePeriod = determineMonthPeriod(new Date());
 
         const _getPaymentByBrid = await Payment.find({ billrun: brid });
-
 
         if(_getPaymentByBrid && _getPaymentByBrid.length !== 0) { //payment _id FOUND
             console.log('updatePayment-payment-id-FOUND: ', _getPaymentByBrid[0]._id);
@@ -136,13 +59,12 @@ export const updatePayment = async (req, res) => {
             let paymentPayload = { 
                 billrun: brid,
                 totalPaid: totP,
-                recentPaymentPeriod: 'todo: get period (15th/Endth) dynamically depending on current day'
+                recentPaymentPeriod: 'latest payment via billrun id'
             }
 
             const newPayment = new Payment(paymentPayload);
             
             try {
-
                 await newPayment.save();
                 if(newPayment) {
 
@@ -150,8 +72,9 @@ export const updatePayment = async (req, res) => {
 
                     let paymentPayload = {
                         client: clientId,
+                        brc: brcId,
                         payment: newPayment._id,
-                        period: '',
+                        period: determinePeriod,
                         mode: modeOpt,
                         amount: totP,
                         status: 'PAID'
@@ -175,7 +98,6 @@ export const updatePayment = async (req, res) => {
             }
         }
 
-    // let executePaid =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[x], { status: 'PAID' });
         //      computeAboutToPay = parseFloat(computeAboutToPay) + parseFloat(req.body.selectedMFs[x]); 
         // }
 
@@ -223,6 +145,15 @@ export const updatePayment = async (req, res) => {
     res.json(updatedBr);
 }
 
+export const getAccumulatedPayments  = async (req, res) => {
+
+    try {
+        const getAllAccumulatedPayments = await AccumulatedPayment.find();
+        res.status(200).json(getAllAccumulatedPayments);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
 
 export const getPayments = async (req, res) => {
     try {
@@ -254,6 +185,5 @@ export const createPayment  = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
-
 
 export default router;
