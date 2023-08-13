@@ -5,6 +5,16 @@ import BillRun from '../models/billrun.js';
 
 const router = express.Router();
 
+function getMonthPeriod(date) {
+
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1).toString().padStart(2, '0');
+    
+    let formattedDate = `${year}-${month}`;
+
+    return formattedDate;
+}
+
 export const createClient  = async (req, res) => {
 
     const client = req.body;
@@ -25,6 +35,7 @@ export const createClient  = async (req, res) => {
             planName: client.planName,
             monthlyFee: client.monthlyFee,
             dueDate: client.dueDate,
+            monthPeriod: getMonthPeriod(new Date()), 
             paymentDate: new Date(),
             status: '---'
     });

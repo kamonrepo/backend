@@ -4,6 +4,11 @@ import AccumulatedPayment from '../models/accumulatedpayment.js';
 
 const router = express.Router();
 
+function getMonthNameFromDate(date) {
+    const monthOptions = { month: 'long' };
+    return date.toLocaleString('en-US', monthOptions);
+}
+
 function determineMonthPeriod(currentDate) {
 
     // First day of the current month
@@ -16,7 +21,7 @@ function determineMonthPeriod(currentDate) {
     let endDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
     if (currentDate >= firstDayOfMonth && currentDate <= fifteenthDayOfMonth) {
-        return '15th';
+        return `${getMonthNameFromDate(currentDate)} 15th`;
     } else if (currentDate >= sixteenthDayOfMonth && currentDate <= endDayOfMonth) {
         return 'Endth';
     } else {
@@ -58,7 +63,7 @@ export const updatePayment = async (req, res) => {
 
             let paymentPayload = { 
                 billrun: brid,
-                totalPaid: totP,
+                totalPaid: totP, //todo:: dynamic computation -> fetch muna sa AccumulatedPayment via brcId -> then compute total
                 recentPaymentPeriod: 'latest payment via billrun id'
             }
 

@@ -6,6 +6,7 @@ const accuPaymentSchema = mongoose.Schema({
     payment: { type: mongoose.Schema.Types.ObjectId, ref: 'payments'},
     brc: { type: mongoose.Schema.Types.ObjectId, ref: 'billruncandidates'},
     period: { type: String },
+    paymentDate: { type: String, required: true },
     mode: { type: String },
     amount: { type: String },
     status: { type: String },
