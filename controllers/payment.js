@@ -59,7 +59,7 @@ export const updatePayment = async (req, res) => {
         console.log('updatePayment-UPDATE-TO-UNPAID-req.body.isPaid: ', req.body.isPaid);
 
         let brid = req.body.selectedBr;
-        let totP = req.body.selectedMFs[0];
+        //let totP = req.body.selectedMFs[0];
         const _selectedBr = await Payment.find({ billrun: brid });
         console.log('updatePayment-UPDATE-TO-UNPAID-selectedBr: ', typeof(_selectedBr));
         console.log('updatePayment-UPDATE-TO-UNPAID-selectedBr-length: ', _selectedBr.length);
@@ -68,8 +68,8 @@ export const updatePayment = async (req, res) => {
         
         // update to PAID
         console.log('updatePayment-UPDATE-TO-PAID-req.body: ', req.body);
-        console.log('updatePayment-UPDATE-TO-PAID-req.body.isPaid: ', req.body.isPaid);
 
+        
         let brid = req.body.selectedBr;
         let brcId = req.body.selectedIDs[0];
         let totP = req.body.selectedMFs[0];
@@ -89,7 +89,7 @@ export const updatePayment = async (req, res) => {
         if(_getAccuPaymentByCriteria.length !== 0) { //payment _id FOUND -> UPDATE by payment Id
             console.log('updatePayment-UPDATE-TO-PAID-payment-id-FOUND-_getAccuPaymentByCriteria: ', _getAccuPaymentByCriteria);
 
-        } else  { // payment _id NOT_FOUND -> FIRST TIME CREATION of payment
+        } else  { // payment _id NOT_FOUND -> FIRST TIME CREATION of payment _getAccuPaymentByCriteria === 0
 
             console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
             console.log('updatePayment-payment-id-NOT-FOUND, isPaid ', req.body.isPaid);
@@ -158,7 +158,7 @@ export const updatePayment = async (req, res) => {
         
                                                 let newBillRunCandidate = new BillRunCandidate(payload);
         
-                                                try{
+                                                try {
         
                                                     newBillRunCandidate.save();
         
