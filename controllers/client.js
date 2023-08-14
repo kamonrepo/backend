@@ -35,8 +35,7 @@ export const createClient  = async (req, res) => {
             planName: client.planName,
             monthlyFee: client.monthlyFee,
             dueDate: client.dueDate,
-            monthPeriod: getMonthPeriod(new Date()), 
-            paymentDate: new Date(),
+            monthPeriod: getMonthPeriod(new Date()),
             status: '---'
     });
         await newBillRunCandidate.save();

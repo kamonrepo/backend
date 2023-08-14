@@ -1,6 +1,7 @@
 import express from 'express';
 import Payment from '../models/payment.js';
 import AccumulatedPayment from '../models/accumulatedpayment.js';
+import BillRunCandidate from '../models/billruncandidate.js';
 
 const router = express.Router();
 
@@ -23,10 +24,30 @@ function determineMonthPeriod(currentDate) {
     if (currentDate >= firstDayOfMonth && currentDate <= fifteenthDayOfMonth) {
         return `${getMonthNameFromDate(currentDate)} 15th`;
     } else if (currentDate >= sixteenthDayOfMonth && currentDate <= endDayOfMonth) {
-        return 'Endth';
+        return `${getMonthNameFromDate(currentDate)} Endth`;
     } else {
         return 'unknown_period';
     }
+}
+
+function addOneMonth(dateString) {
+    const [year, month] = dateString.split("-");
+    const originalDate = new Date(year, parseInt(month) - 1); // JS months are 0-based
+    originalDate.setMonth(originalDate.getMonth() + 1);
+  
+    const newYear = originalDate.getFullYear();
+    const newMonth = (originalDate.getMonth() + 1).toString().padStart(2, "0");
+  
+    return `${newYear}-${newMonth}`;
+}
+
+async function appendBRC(data) {
+
+    return await new Promise(resolve => {
+
+        
+        resolve(true);
+    })
 }
 
 export const updatePayment = async (req, res) => {
@@ -34,18 +55,20 @@ export const updatePayment = async (req, res) => {
     let updatedBr = null;
 
     if(req.body.isPaid == true){ // then update to UNPAID
-        console.log('updatePayment-UNPAID-req.body: ', req.body);
-      
+        console.log('updatePayment-UPDATE-TO-UNPAID-req.body: ', req.body);
+        console.log('updatePayment-UPDATE-TO-UNPAID-req.body.isPaid: ', req.body.isPaid);
+
         let brid = req.body.selectedBr;
         let totP = req.body.selectedMFs[0];
-        const _selectedBr = await Payment.find({ billrun: brid});
-        console.log('updatePayment-selectedBr: ', typeof(_selectedBr));
-        console.log('updatePayment-selectedBr-length: ', _selectedBr.length);
+        const _selectedBr = await Payment.find({ billrun: brid });
+        console.log('updatePayment-UPDATE-TO-UNPAID-selectedBr: ', typeof(_selectedBr));
+        console.log('updatePayment-UPDATE-TO-UNPAID-selectedBr-length: ', _selectedBr.length);
 
     } else { 
         
         // update to PAID
-        console.log('updatePayment-PAID-req.body: ', req.body);
+        console.log('updatePayment-UPDATE-TO-PAID-req.body: ', req.body);
+        console.log('updatePayment-UPDATE-TO-PAID-req.body.isPaid: ', req.body.isPaid);
 
         let brid = req.body.selectedBr;
         let brcId = req.body.selectedIDs[0];
@@ -53,98 +76,235 @@ export const updatePayment = async (req, res) => {
         let clientId = req.body.selectedBRCClient;
         let determinePeriod = determineMonthPeriod(new Date());
 
-        const _getPaymentByBrid = await Payment.find({ billrun: brid });
+        const _getPaymentByBrid = await Payment.find({ billrun: brid }); 
 
-        if(_getPaymentByBrid && _getPaymentByBrid.length !== 0) { //payment _id FOUND
-            console.log('updatePayment-payment-id-FOUND: ', _getPaymentByBrid[0]._id);
+        console.log('paymentpaymentpayment: ', _getPaymentByBrid[0]._id);
+        console.log('brcIdbrcIdbrcIdbrcId: ', brcId);
+        console.log('clientIdclientIdclientId: ', clientId[0]);
 
-        } else { // payment _id NOT_FOUND
-            console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ',req.body);
+        // Check client record sa AccumulatedPayment
+        const _getAccuPaymentByCriteria = await AccumulatedPayment.find({ payment: _getPaymentByBrid[0]._id, brc: brcId, client: clientId[0] }); 
+        console.log('_getAccuPaymentByCriteria-lenghthththth: ', _getAccuPaymentByCriteria.length);
+     
+        if(_getAccuPaymentByCriteria.length !== 0) { //payment _id FOUND -> UPDATE by payment Id
+            console.log('updatePayment-UPDATE-TO-PAID-payment-id-FOUND-_getAccuPaymentByCriteria: ', _getAccuPaymentByCriteria);
 
-            let paymentPayload = { 
-                billrun: brid,
-                totalPaid: totP, //todo:: dynamic computation -> fetch muna sa AccumulatedPayment via brcId -> then compute total
-                recentPaymentPeriod: 'latest payment via billrun id'
-            }
+        } else  { // payment _id NOT_FOUND -> FIRST TIME CREATION of payment
 
-            const newPayment = new Payment(paymentPayload);
-            
+            console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
+            console.log('updatePayment-payment-id-NOT-FOUND, isPaid ', req.body.isPaid);
+
+            //update BRC status by BRCID
+            let executeStatusUpdate = null;
+
             try {
-                await newPayment.save();
-                if(newPayment) {
 
-                    let modeOpt = process.env.GCASH || 'MANUAL';
+                executeStatusUpdate =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[0], { status: 'PAID', paymentDate: new Date() });
 
-                    let paymentPayload = {
-                        client: clientId,
-                        brc: brcId,
-                        payment: newPayment._id,
-                        period: determinePeriod,
-                        mode: modeOpt,
-                        amount: totP,
-                        status: 'PAID'
+                if(executeStatusUpdate) 
+                {
+                    let paymentPayload = { 
+                        billrun: brid,
+                        totalPaid: totP, //todo:: dynamic computation -> fetch muna sa AccumulatedPayment via brcId -> then compute total
+                        recentPaymentPeriod: 'latest payment via billrun id'
                     }
-
-                    let newAccumulatedPayment = new AccumulatedPayment(paymentPayload);
-
-                    try{
-
-                        newAccumulatedPayment.save();
-                    } catch(error) {
-
-                        console.log('catch-AccumulatedPayment-error: ', error);
+        
+                    const firstTimePayment = new Payment(paymentPayload);
+                    
+                    try {
+                    
+                        await firstTimePayment.save();
+                        if(firstTimePayment) {
+        
+                            let modeOpt = process.env.GCASH || 'MANUAL';
+        
+                            let paymentPayload = {
+                                client: clientId,
+                                brc: brcId,
+                                payment: firstTimePayment._id,
+                                period: determinePeriod,
+                                paymentDate: new Date(),
+                                mode: modeOpt,
+                                amount: totP,
+                                status: 'PAID'
+                            }
+        
+                            let firstTimeAccumulatedPayment = new AccumulatedPayment(paymentPayload);
+        
+                            try {
+        
+                                firstTimeAccumulatedPayment.save();
+        
+                                if(firstTimeAccumulatedPayment) {
+                                        try {
+                                            const brcs = await BillRunCandidate.findById(brcId);
+                                            if(brcs){
+                                                console.log('brcs::: ', brcs);
+                                                let currentMonthPeriod = brcs.monthPeriod; // string: YYYY-MM 
+                                                let updatedMonthPeriod = addOneMonth(currentMonthPeriod);
+        
+                                                let payload = {
+                                                    host: brid,
+                                                    client: clientId,
+                                                    name: brcs.name,
+                                                    plan: brcs.plan,
+                                                    planName: brcs.planName,
+                                                    monthlyFee: brcs.monthlyFee,
+                                                    dueDate: brcs.dueDate,
+                                                    monthPeriod: updatedMonthPeriod, 
+                                                    paymentDate: new Date(),
+                                                    status: '---'
+                                                }
+        
+                                                let newBillRunCandidate = new BillRunCandidate(payload);
+        
+                                                try{
+        
+                                                    newBillRunCandidate.save();
+        
+                                                } catch (error) {
+                                                    console.log('catch-newBillRunCandidate.save()-error: ', error);
+                                                    res.status(404).json({ message: error.message });
+                                                }
+                                            }
+        
+                                        } catch (error) {
+                                            console.log('catch-BillRunCandidate-findbyId-error: ', error);
+                                            res.status(404).json({ message: error.message });
+                                        }
+                                }
+        
+                            } catch(error) {
+        
+                                console.log('catch-AccumulatedPayment-error: ', error);
+                                res.status(404).json({ message: error.message });
+                            }
+                        }
+              
+                    } catch (error) {
+                        console.log('catch-Payment: ', error);
                         res.status(404).json({ message: error.message });
                     }
+
                 }
-      
-            } catch (error) {
-                console.log('catch-createPayment: ', error);
+
+            } catch(error) {
+                console.log('catch-BillRunCandidate-findByIdAndUpdate-executeStatusUpdate: ', error);
                 res.status(404).json({ message: error.message });
             }
+
+
         }
 
-        //      computeAboutToPay = parseFloat(computeAboutToPay) + parseFloat(req.body.selectedMFs[x]); 
-        // }
+        //old
+        // if(_getPaymentByBrid && _getPaymentByBrid.length !== 0) { //payment _id FOUND -> UPDATE by payment Id
+        //     console.log('updatePayment-UPDATE-TO-PAID-payment-id-FOUND: ', _getPaymentByBrid[0]._id);
 
-        //before the update of BillRun, get the existing value of fee's
-        // const selectedBr = await BillRun.find({ _id: req.body.selectedBr });
+        // } else { // payment _id NOT_FOUND -> FIRST TIME CREATION of payment
+        //     console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
+        //     console.log('updatePayment-payment-id-NOT-FOUND, isPaid ', req.body.isPaid);
 
-        // let currentTotal = parseFloat(selectedBr[0].total);
-        // let currentPaid = parseFloat(selectedBr[0].paid); 
-        // let currentUnpaid = parseFloat(selectedBr[0].unpaid); 
+        //     //update BRC status by BRCID
+        //     let executeStatusUpdate = null;
 
-        // console.log('************************************');
-        // console.log('***AboutToPay::: ', computeAboutToPay);
-        // console.log('currentTotal::: ', currentTotal);
-        // console.log('currentPaid::: ', currentPaid);
-        // console.log('currentUnpaid::: ', currentUnpaid);
-        // console.log('************************************');
+        //     try {
 
-        // let computeLatestPaid = 0;
-        // let computeLatestUnpaid = 0;
+        //         executeStatusUpdate =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[0], { status: 'PAID', paymentDate: new Date() });
 
-        // if(currentPaid != 0) {
-        //     console.log('currentPaid != 0 ::: ', currentPaid);
-        //     computeLatestPaid = parseFloat(currentPaid) + parseFloat(computeAboutToPay);
-        //     computeLatestUnpaid = parseFloat(currentUnpaid) - parseFloat(computeAboutToPay);
-        // } 
+        //         if(executeStatusUpdate) 
+        //         {
+        //             let paymentPayload = { 
+        //                 billrun: brid,
+        //                 totalPaid: totP, //todo:: dynamic computation -> fetch muna sa AccumulatedPayment via brcId -> then compute total
+        //                 recentPaymentPeriod: 'latest payment via billrun id'
+        //             }
         
-        // if(currentPaid == 0){
-        //     console.log('currentPaid == 0 ::: ', currentPaid);
-        //         computeLatestPaid = computeAboutToPay;
-        //         computeLatestUnpaid = parseFloat(currentUnpaid) - parseFloat(computeLatestPaid);
-        // } 
+        //             const firstTimePayment = new Payment(paymentPayload);
+                    
+        //             try {
+                    
+        //                 await firstTimePayment.save();
+        //                 if(firstTimePayment) {
+        
+        //                     let modeOpt = process.env.GCASH || 'MANUAL';
+        
+        //                     let paymentPayload = {
+        //                         client: clientId,
+        //                         brc: brcId,
+        //                         payment: firstTimePayment._id,
+        //                         period: determinePeriod,
+        //                         paymentDate: new Date(),
+        //                         mode: modeOpt,
+        //                         amount: totP,
+        //                         status: 'PAID'
+        //                     }
+        
+        //                     let firstTimeAccumulatedPayment = new AccumulatedPayment(paymentPayload);
+        
+        //                     try {
+        
+        //                         firstTimeAccumulatedPayment.save();
+        
+        //                         if(firstTimeAccumulatedPayment) {
+        //                                 try {
+        //                                     const brcs = await BillRunCandidate.findById(brcId);
+        //                                     if(brcs){
+        //                                         console.log('brcs::: ', brcs);
+        //                                         let currentMonthPeriod = brcs.monthPeriod; // string: YYYY-MM 
+        //                                         let updatedMonthPeriod = addOneMonth(currentMonthPeriod);
+        
+        //                                         let payload = {
+        //                                             host: brid,
+        //                                             client: clientId,
+        //                                             name: brcs.name,
+        //                                             plan: brcs.plan,
+        //                                             planName: brcs.planName,
+        //                                             monthlyFee: brcs.monthlyFee,
+        //                                             dueDate: brcs.dueDate,
+        //                                             monthPeriod: updatedMonthPeriod, 
+        //                                             paymentDate: new Date(),
+        //                                             status: '---'
+        //                                         }
+        
+        //                                         let newBillRunCandidate = new BillRunCandidate(payload);
+        
+        //                                         try{
+        
+        //                                             newBillRunCandidate.save();
+        
+        //                                         } catch (error) {
+        //                                             console.log('catch-newBillRunCandidate.save()-error: ', error);
+        //                                             res.status(404).json({ message: error.message });
+        //                                         }
+        //                                     }
+        
+        //                                 } catch (error) {
+        //                                     console.log('catch-BillRunCandidate-findbyId-error: ', error);
+        //                                     res.status(404).json({ message: error.message });
+        //                                 }
+        //                         }
+        
+        //                     } catch(error) {
+        
+        //                         console.log('catch-AccumulatedPayment-error: ', error);
+        //                         res.status(404).json({ message: error.message });
+        //                     }
+        //                 }
+              
+        //             } catch (error) {
+        //                 console.log('catch-Payment: ', error);
+        //                 res.status(404).json({ message: error.message });
+        //             }
 
-        // console.log('\n');
-        // console.log(`[PAID]-computeLatestPaid: ${computeAboutToPay}`);   
-        // console.log('\n');
-        // console.log(`[PAID]-computeLatestUnPaid: ${currentUnpaid} -  ${computeLatestPaid} = ${computeLatestUnpaid}`);  
-        // console.log('[PAID]-computeLatestUnPaid::: ', computeLatestUnpaid);   
-        // console.log('[PAID]-await BillRun.findByIdAndUpdate',  { paid: computeLatestPaid, unpaid: computeLatestUnpaid  });
-        // updatedBrPAID =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestPaid, unpaid: computeLatestUnpaid });
-        // updatedBr = updatedBrPAID;
-        // console.log('[PAID]-await BillRun.findByIdAndUpdate',  { paid: computeLatestPaid, unpaid: computeLatestUnpaid == 0 ? currentTotal : computeLatestUnpaid });
-        // updatedBr =  await BillRun.findByIdAndUpdate(req.body.selectedBr, { paid: computeLatestPaid, unpaid: computeLatestUnpaid == 0 ? currentTotal : computeLatestUnpaid });
+        //         }
+
+        //     } catch(error) {
+        //         console.log('catch-BillRunCandidate-findByIdAndUpdate-executeStatusUpdate: ', error);
+        //         res.status(404).json({ message: error.message });
+        //     }
+
+
+        // }
     }
 
     res.json(updatedBr);
