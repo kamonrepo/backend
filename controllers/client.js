@@ -36,7 +36,7 @@ export const createClient  = async (req, res) => {
             monthlyFee: client.monthlyFee,
             dueDate: client.dueDate,
             monthPeriod: getMonthPeriod(new Date()),
-            status: '---'
+            status: 'NOTPAID'
     });
         await newBillRunCandidate.save();
 

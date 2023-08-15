@@ -4,7 +4,6 @@ const billRunCandidateSchema = mongoose.Schema({
 
     host: { type: mongoose.Schema.Types.ObjectId, ref: 'billruns'},
     client: { type: mongoose.Schema.Types.ObjectId, ref: 'clients'},
-    targetloc: { type: mongoose.Schema.Types.ObjectId, ref: 'targetlocations'},
     plan: {  type: mongoose.Schema.Types.ObjectId, ref: 'plans'},
     planName: { type: String, required: true },
     name: { type: String, required: true },
