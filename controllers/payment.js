@@ -42,10 +42,8 @@ function addOneMonth(dateString) {
 }
 
 async function appendBRC(data) {
-
     return await new Promise(resolve => {
-
-        
+        console.log(data);
         resolve(true);
     })
 }
@@ -55,27 +53,28 @@ async function findAndUpdateByBRC(brcId, newStatus) {
         // Find the document with the provided brcId and update the status field
         const updatedPayment = await AccumulatedPayment.findOneAndUpdate(
             { brc: brcId },
-            { $set: { status: newStatus } },
+            { $set: { status: newStatus, paymentDate: new Date() } },
             { new: true } // To return the updated document
         );
 
+        console.log('return updatedPayment:', updatedPayment);
         return updatedPayment;
 
     } catch (error) {
-        console.error('findAndUpdateByBRC-catch-Error:', error);
+        console.log('findAndUpdateByBRC-catch-Error:', error);
         return error;
     }
 }
 
 export const updatePayment = async (req, res) => {
 
-    let updatedBr = null;
+    let updatedPayments = null;
 
     if(req.body.isPaid == true) { // then update to UNPAID
 
         let brid = req.body.selectedBr;
         let brcId = req.body.selectedIDs[0];
-        let totP = req.body.selectedMFs[0];
+        let toUnpaidFee = req.body.selectedMFs[0];
         let clientId = req.body.selectedBRCClient[0];
         let determinePeriod = determineMonthPeriod(new Date());
 
@@ -90,21 +89,40 @@ export const updatePayment = async (req, res) => {
             executeStatusUpdate =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[0], { status: 'NOTPAID', paymentDate: new Date() });
 
             if(executeStatusUpdate) {
-
-                let UPDATE_ACCUMULATED_PAYMENT_TO_UNPAID = null;
+                let updatedAccumulatedPayment = null;
         
                 try {
+                   
                     //todoo: findAndUpdate by FK
+                    updatedAccumulatedPayment = await findAndUpdateByBRC(req.body.selectedIDs[0], 'NOTPAID');
 
+                    if(updatedAccumulatedPayment){
+                        console.log('updatedAccumulatedPayment::: ', updatedAccumulatedPayment);
 
-                    UPDATE_ACCUMULATED_PAYMENT_TO_UNPAID = findAndUpdateByBRC(req.body.selectedIDs[0], 'NOT PAID');
+                        //  //todoo-RESUME-RESUME-RESUME: update payment summary na reference ung accumulated payments        
+                        //  const accuPyt = await AccumulatedPayment.find({ brid: brid });
+                        //  console.log('accuPytaccuPytaccuPytaccuPyt-RESPONSE.typeof::: ', typeof(accuPyt));
+                        //  console.log('accuPytaccuPytaccuPytaccuPyt-RESPONSE.length::: ', accuPyt.length);
 
-                    if(UPDATE_ACCUMULATED_PAYMENT_TO_UNPAID){
-                        console.log('use this to compute totals summary::: ', UPDATE_ACCUMULATED_PAYMENT_TO_UNPAID);
+                        //  if(accuPyt){
+                        //      //let accuPytFilteredByBRID = [];
+                        //      let sumAmount = 0;
 
-                         //todoo: update payment summary
+                        //      Object.keys(accuPyt).forEach(index => {
+
+                        //         if(accuPyt[index].monthPeriod == returnMonthPeriod) {
+                        //             //accuPytFilteredByBRID.push(accuPyt[index])
+                        //             sumAmount = parseFloat(sumAmount) + parseFloat(accuPyt[index].amount); 
+                        //         }
+                        //     })
+
+                        //     console.log('use this to refer on Payments total summary: sumAmount-sumAmount-sumAmount::: ', sumAmount);
+
+                        //     //NO NEED TO UPDATE TOTAL SUMMARY ON PAYMENTS !!!!!!!!!!!!!
+                        //  }
+
                     } else {
-                        console.log('UPDATE_ACCUMULATED_PAYMENT_TO_UNPAID-findAndUpdateByBRC-FAIL::: ', UPDATE_ACCUMULATED_PAYMENT_TO_UNPAID);
+                        console.log('UPDATE_ACCUMULATED_PAYMENT_TO_UNPAID-findAndUpdateByBRC-FAIL::: ', updatedAccumulatedPayment);
                     }
 
                 } catch(error) {
@@ -123,9 +141,8 @@ export const updatePayment = async (req, res) => {
             console.log('no way ma punta here kasi, sure na meron ng payment ito kasi mag a-unpaid sya, therefore nag bayad na sya. babawwin nya lang. ');
         }
 
-    } else { 
-        
-        // update to PAID
+    } else {  // update to PAID
+             
         console.log('updatePayment-UPDATE-TO-PAID-req.body: ', req.body);
 
         let brid = req.body.selectedBr;
@@ -138,12 +155,43 @@ export const updatePayment = async (req, res) => {
 
         if(_getPaymentBy_BRID_CLIENT_ID.length !== 0) { //payment _id FOUND -> UPDATE by payment Id
             //add safety validation here if BRC status is UNPAID -> then updatye sa PAID
+            //
             console.log('scenario: ma pa find ko ung BRC na nag UNPAID then mag PAID ulit ngayon, nag ka record na sya Payments, update PAID status lang ulit', _getPaymentBy_BRID_CLIENT_ID);
+            // im here naaaaaa !!!!
+
+            let executeStatusUpdateBRC = null;
+
+            try {
+                executeStatusUpdateBRC =  await BillRunCandidate.findByIdAndUpdate(brcId, { status: 'PAID', paymentDate: new Date() });
+
+                if(executeStatusUpdateBRC) {
+                    
+                    let executeStatusUpdateACCUPYT = null;
+
+                    try { //update by brc
+
+                        executeStatusUpdateACCUPYT = await findAndUpdateByBRC(brcId, 'PAID');
+
+                        if(executeStatusUpdateACCUPYT) {
+                            console.log('executeStatusUpdateACCUPYT success! :', executeStatusUpdateACCUPYT);
+                        } else {
+                            console.log('executeStatusUpdateACCUPYT fail! :', executeStatusUpdateACCUPYT);
+                        }
+
+                    } catch(error) {
+                        console.log('catch-AccumulatedPayment-UPDATE-TO-PAID-findByIdAndUpdate-error: ', error);
+                        res.status(404).json({ message: error.message });
+                    }
+                }
+
+            } catch(error) {
+                console.log('catch-BillRunCandidate-UPDATE-TO-PAID-findByIdAndUpdate-error: ', error);
+                res.status(404).json({ message: error.message });
+            }
 
         } else  { // payment _id NOT_FOUND -> FIRST TIME CREATION of payment 
 
             console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
-            console.log('updatePayment-payment-id-NOT-FOUND, isPaid ', req.body.isPaid);
 
             //update BRC status by BRCID
             let executeStatusUpdate = null;
@@ -152,11 +200,11 @@ export const updatePayment = async (req, res) => {
                 executeStatusUpdate =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[0], { status: 'PAID', paymentDate: new Date() });
 
                 if(executeStatusUpdate) {
+
                     let paymentPayload = { 
                         billrun: brid,
                         client: clientId,
-                        totalPaid: totP, //todo:: dynamic computation -> fetch muna sa AccumulatedPayment via brcId -> then compute total
-                        recentPaymentPeriod: 'latest payment via billrun id'
+                        recentPaymentPeriod: 'latest PAID month period on accumulated payment - fetch via billrun id'
                     }
         
                     const firstTimePayment = new Payment(paymentPayload);
@@ -170,6 +218,7 @@ export const updatePayment = async (req, res) => {
                             let paymentPayload = {
                                 client: clientId,
                                 brc: brcId,
+                                brid: brid,
                                 payment: firstTimePayment._id,
                                 period: determinePeriod,
                                 paymentDate: new Date(),
@@ -233,7 +282,6 @@ export const updatePayment = async (req, res) => {
                         console.log('catch-Payment: ', error);
                         res.status(404).json({ message: error.message });
                     }
-
                 }
 
             } catch(error) {
@@ -243,7 +291,7 @@ export const updatePayment = async (req, res) => {
         }
     }
 
-    res.json(updatedBr);
+    res.json(updatedPayments);
 }
 
 export const getAccumulatedPayments  = async (req, res) => {
