@@ -15,13 +15,17 @@ export const getBillrunCandidate = async (req, res) => {
     }
 };
 
-export const getBRCById = async (req, res) => { 
+export const getBRCByBRId = async (req, res) => { 
 
    const hostId = req.params.id;
 
    try {
 
+       console.log('backend-BillRunCandidate.find-by-host-brid-request:::: ', hostId); //todododododododododod
        const brcs = await BillRunCandidate.find({ host: hostId  });
+       console.log('backend-BillRunCandidate.find-by-host-brid-BRC-LENGTH:::: ', brcs.length);
+       console.log('backend-BillRunCandidate.find-by-host-brid-response:::: ', brcs);
+
        res.status(200).json(brcs);
 
    } catch (error) {

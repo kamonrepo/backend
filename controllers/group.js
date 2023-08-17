@@ -6,7 +6,6 @@ import BillRun from '../models/billrun.js';
 
 const router = express.Router();
 
-
 export const getGroups = async (req, res) => {
     try {
         const getAllGroups = await Group.find();
@@ -91,7 +90,7 @@ export const createTargetLoc = async (req, res) => {
 
             buildMergedGroup.push({id:  newTargetlocation._id, name: targetloc.name});
 
-            Object.assign(payload, { mergedGroup: buildMergedGroup,  total: 0, paid: 0, unpaid: 0 });
+            Object.assign(payload, { mergedGroup: buildMergedGroup });
 
             let newBillRun = new BillRun(payload);
             await newBillRun.save();
