@@ -57,7 +57,7 @@ async function findAndUpdateByBRC(brcId, newStatus) {
             { new: true } // To return the updated document
         );
 
-        console.log('return updatedPayment:', updatedPayment);
+       // console.log('return updatedPayment:', updatedPayment);
         return updatedPayment;
 
     } catch (error) {
@@ -143,7 +143,7 @@ export const updatePayment = async (req, res) => {
 
     } else {  // update to PAID
              
-        console.log('updatePayment-UPDATE-TO-PAID-req.body: ', req.body);
+        //console.log('updatePayment-UPDATE-TO-PAID-req.body: ', req.body);
 
         let brid = req.body.selectedBr;
         let brcId = req.body.selectedIDs[0];
@@ -156,7 +156,7 @@ export const updatePayment = async (req, res) => {
         if(_getPaymentBy_BRID_CLIENT_ID.length !== 0) { //payment _id FOUND -> UPDATE by payment Id
             //add safety validation here if BRC status is UNPAID -> then updatye sa PAID
             //
-            console.log('scenario: ma pa find ko ung BRC na nag UNPAID then mag PAID ulit ngayon, nag ka record na sya Payments, update PAID status lang ulit', _getPaymentBy_BRID_CLIENT_ID);
+            //console.log('scenario: ma pa find ko ung BRC na nag UNPAID then mag PAID ulit ngayon, nag ka record na sya Payments, update PAID status lang ulit', _getPaymentBy_BRID_CLIENT_ID);
             // im here naaaaaa !!!!
 
             let executeStatusUpdateBRC = null;
@@ -173,9 +173,9 @@ export const updatePayment = async (req, res) => {
                         executeStatusUpdateACCUPYT = await findAndUpdateByBRC(brcId, 'PAID');
 
                         if(executeStatusUpdateACCUPYT) {
-                            console.log('executeStatusUpdateACCUPYT success! :', executeStatusUpdateACCUPYT);
+                            //console.log('executeStatusUpdateACCUPYT success! :', executeStatusUpdateACCUPYT);
                         } else {
-                            console.log('executeStatusUpdateACCUPYT fail! :', executeStatusUpdateACCUPYT);
+                            //console.log('executeStatusUpdateACCUPYT fail! :', executeStatusUpdateACCUPYT);
                         }
 
                     } catch(error) {
@@ -191,7 +191,7 @@ export const updatePayment = async (req, res) => {
 
         } else  { // payment _id NOT_FOUND -> FIRST TIME CREATION of payment 
 
-            console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
+           // console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
 
             //update BRC status by BRCID
             let executeStatusUpdate = null;

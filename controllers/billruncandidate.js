@@ -1,7 +1,6 @@
 import express from 'express';
 import BillRunCandidate from '../models/billruncandidate.js';
 import BillRun from '../models/billrun.js';
-import Payment from '../models/payment.js';
 
 const router = express.Router();
 
@@ -15,6 +14,35 @@ export const getBillrunCandidate = async (req, res) => {
     }
 };
 
+function getMonthNameFromDate(date) {
+    const monthOptions = { month: 'long' };
+    return date.toLocaleString('en-US', monthOptions);
+}
+
+function determineMonthPeriod(currentDate) {
+
+    // First day of the current month
+    let firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    // 15th day of the current month
+    let fifteenthDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 15);
+    // 16th day of the current month
+    let sixteenthDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 16);
+    // End day of the current month (last day of the next month minus one day)
+    let endDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+    if (currentDate >= firstDayOfMonth && currentDate <= fifteenthDayOfMonth) {
+        console.log('currentDate::: ', currentDate); 
+        return currentDate;
+    } else if (currentDate >= sixteenthDayOfMonth && currentDate <= endDayOfMonth) {
+        console.log('currentDate::: ', currentDate); 
+        return currentDate;
+    } else {
+        console.log('unknown_period::: ', currentDate); 
+        return 'unknown_period';
+    }
+}
+
+
 export const getBRCByBRId = async (req, res) => { 
 
    const hostId = req.params.id;
@@ -22,9 +50,8 @@ export const getBRCByBRId = async (req, res) => {
    try {
 
        console.log('backend-BillRunCandidate.find-by-host-brid-request:::: ', hostId); //todododododododododod
-       const brcs = await BillRunCandidate.find({ host: hostId  });
+       const brcs = await BillRunCandidate.find({ host: hostId });
        console.log('backend-BillRunCandidate.find-by-host-brid-BRC-LENGTH:::: ', brcs.length);
-       console.log('backend-BillRunCandidate.find-by-host-brid-response:::: ', brcs);
 
        res.status(200).json(brcs);
 
