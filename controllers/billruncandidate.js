@@ -8,7 +8,7 @@ export const computeFees = async (req, res) => {
     try {
         // Calculate total sum of monthlyFee WHERE status="PAID" and group by host
         const paidAggregation = await BillRunCandidate.aggregate([
-           { $match: { status: "PAID" } },
+           { $match: { status: "PAID", monthPeriod: "2023-08" } },
            {
               $group: {
                  _id: "$host",
@@ -21,7 +21,7 @@ export const computeFees = async (req, res) => {
   
         // Calculate total sum of monthlyFee WHERE status="NOTPAID" and group by host
         const notPaidAggregation = await BillRunCandidate.aggregate([
-           { $match: { status: "NOTPAID" } },
+           { $match: { status: "NOTPAID", monthPeriod: "2023-08" } },
            {
               $group: {
                  _id: "$host",
