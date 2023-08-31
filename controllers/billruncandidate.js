@@ -4,6 +4,60 @@ import BillRun from '../models/billrun.js';
 
 const router = express.Router();
 
+export const computeFees = async (req, res) => { 
+    try {
+        // Calculate total sum of monthlyFee WHERE status="PAID" and group by host
+        const paidAggregation = await BillRunCandidate.aggregate([
+           { $match: { status: "PAID" } },
+           {
+              $group: {
+                 _id: "$host",
+                 totalPaidSum: { $sum: { $toDouble: "$monthlyFee" } }
+              }
+           }
+        ]);
+
+        console.log('paidAggregation::: ', paidAggregation);
+  
+        // Calculate total sum of monthlyFee WHERE status="NOTPAID" and group by host
+        const notPaidAggregation = await BillRunCandidate.aggregate([
+           { $match: { status: "NOTPAID" } },
+           {
+              $group: {
+                 _id: "$host",
+                 totalNotPaidSum: { $sum: { $toDouble: "$monthlyFee" } }
+              }
+           }
+        ]);
+
+        console.log('notPaidAggregation::: ', notPaidAggregation);
+  
+        // Get bill run names
+        const billRunNames = await BillRun.aggregate([
+           {
+              $project: {
+                 _id: 0,
+                 host: "$_id",
+                 billRun: 1
+              }
+           }
+        ]);
+  
+        // Combine the results into a single object
+        const result = billRunNames.map(item => ({
+           host: item.host,
+           billRun: item.billRun,
+           totalPaidSum: (paidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalPaidSum: 0 }).totalPaidSum,
+           totalNotPaidSum: (notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalNotPaidSum: 0 }).totalNotPaidSum
+        }));
+  
+        res.status(200).json(result);
+     } catch (error) {
+        res.status(500).json({ message: error.message });
+     }
+ }
+ 
+
 export const getBillrunCandidate = async (req, res) => {
     try {
         const getAllBillRunCan = await BillRunCandidate.find();
