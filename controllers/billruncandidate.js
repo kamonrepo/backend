@@ -17,8 +17,6 @@ export const computeFees = async (req, res) => {
            }
         ]);
 
-        console.log('paidAggregation::: ', paidAggregation);
-  
         // Calculate total sum of monthlyFee WHERE status="NOTPAID" and group by host
         const notPaidAggregation = await BillRunCandidate.aggregate([
            { $match: { status: "NOTPAID" } },
@@ -29,8 +27,6 @@ export const computeFees = async (req, res) => {
               }
            }
         ]);
-
-        console.log('notPaidAggregation::: ', notPaidAggregation);
   
         // Get bill run names
         const billRunNames = await BillRun.aggregate([
