@@ -41,13 +41,6 @@ function addOneMonth(dateString) {
     return `${newYear}-${newMonth}`;
 }
 
-async function appendBRC(data) {
-    return await new Promise(resolve => {
-        console.log(data);
-        resolve(true);
-    })
-}
-
 async function findAndUpdateByBRC(brcId, newStatus) {
     try {
         // Find the document with the provided brcId and update the status field
