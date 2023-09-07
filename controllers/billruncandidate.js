@@ -22,6 +22,7 @@ export const computeFees = async (req, res) => {
         
          let correctMonthPeriod = getCurrentMonthPeriod(new Date());
 
+         console.log('correctMonthPeriod::: ', correctMonthPeriod);
 
         // Calculate total sum of monthlyFee WHERE status="PAID" and group by host
         const paidAggregation = await BillRunCandidate.aggregate([
