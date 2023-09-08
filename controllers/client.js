@@ -5,16 +5,6 @@ import BillRun from '../models/billrun.js';
 
 const router = express.Router();
 
-// function getMonthPeriod(date) {
-
-//     let year = date.getFullYear();
-//     let month = (date.getMonth() + 1).toString().padStart(2, '0');
-
-//     let formattedDate = `${year}-${month}`;
-
-//     return formattedDate;
-// }
-
 function getFirstDayOfMonth(date) {
     // Create a new Date object with the same year and month
     const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -23,17 +13,14 @@ function getFirstDayOfMonth(date) {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
     hour12: false, // Use 24-hour format
     timeZone: 'Asia/Manila',
    };
   
    const formattedDate = firstDayOfMonth.toLocaleString('en-US', options);
     
-    return formattedDate;
-  }
+   return formattedDate;
+}
 
 export const createClient  = async (req, res) => {
 

@@ -10,7 +10,7 @@ const billRunCandidateSchema = mongoose.Schema({
     monthlyFee: { type: String, required: true },
     paymentDate: { type: String },
     dueDate: { type: String, required: true },
-    monthPeriod: { type: Date, required: true },
+    monthPeriod: { type: String, required: true },
     status: { type: String },
     createdAt: {
         type: Date,
