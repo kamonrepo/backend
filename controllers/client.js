@@ -61,12 +61,12 @@ export const createClient  = async (req, res) => {
 
 export const getClientGroupBy = async (req, res) => { 
 
-     const { group } = req.params;
-      console.log('todayy-req: ', req.params);
+    const { group } = req.params;
+    console.log('todayy-req: ', req.params);
 
     try {
         const client = await Client.find({ group: group  });
-         console.log('todayy-resp: ', client);   
+        console.log('todayy-resp: ', client);   
         
         res.status(200).json(client);
 

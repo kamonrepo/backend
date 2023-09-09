@@ -1,7 +1,8 @@
 import express from 'express';
-import {  getBillrunCandidate, updateBRC, getBRCByBRId, computeFees } from '../controllers/billruncandidate.js';
+import {  getBillrunCandidate, updateBRC, getBRCByBRId, computeFees, createBRC } from '../controllers/billruncandidate.js';
 
 const router = express.Router();
+    router.post('/', createBRC);
     router.get('/', getBillrunCandidate);
     router.get('/computeFees', computeFees);
     router.get('/:id', getBRCByBRId);

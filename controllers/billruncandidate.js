@@ -25,27 +25,101 @@ export const computeFees = async (req, res) => {
          console.log('correctMonthPeriod::: ', correctMonthPeriod);
 
         // Calculate total sum of monthlyFee WHERE status="PAID" and group by host
+        // const paidAggregation = await BillRunCandidate.aggregate([
+        //    { $match: { status: "PAID" } },
+        //    {
+        //       $group: {
+        //          _id: "$host",
+        //          totalPaidSum: { $sum: { $toDouble: "$monthlyFee" } }
+        //       }
+        //    }
+        // ]);
+
         const paidAggregation = await BillRunCandidate.aggregate([
-           { $match: { status: "PAID" } },
-           {
+            {
+              $match: {
+                $and: [
+                  {
+                    status: "PAID",
+                  },
+                  {
+                    $expr: {
+                      $lte: [
+                        {
+                          $toDate: "$monthPeriod",
+                        },
+                        {
+                          $dateFromParts: {
+                            year: {
+                              $year: new Date(),
+                            },
+                            month: {
+                              $month: new Date(),
+                            },
+                            day: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            {
               $group: {
-                 _id: "$host",
-                 totalPaidSum: { $sum: { $toDouble: "$monthlyFee" } }
-              }
-           }
-        ]);
+                _id: "$host",
+                totalPaidSum: {
+                  $sum: {
+                    $toDouble: "$monthlyFee",
+                  },
+                },
+              },
+            },
+          ]);
 
 
         // Calculate total sum of monthlyFee WHERE status="NOTPAID" and group by host
         const notPaidAggregation = await BillRunCandidate.aggregate([
-           { $match: { status: "NOTPAID" } },
-           {
+            {
+              $match: {
+                $and: [
+                  {
+                    status: "NOTPAID",
+                  },
+                  {
+                    $expr: {
+                      $lte: [
+                        {
+                          $toDate: "$monthPeriod",
+                        },
+                        {
+                          $dateFromParts: {
+                            year: {
+                              $year: new Date(),
+                            },
+                            month: {
+                              $month: new Date(),
+                            },
+                            day: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            {
               $group: {
-                 _id: "$host",
-                 totalNotPaidSum: { $sum: { $toDouble: "$monthlyFee" } }
-              }
-           }
-        ]);
+                _id: "$host",
+                totalPaidSum: {
+                  $sum: {
+                    $toDouble: "$monthlyFee",
+                  },
+                },
+              },
+            },
+          ]);
   
         // Get bill run names
         const billRunNames = await BillRun.aggregate([
@@ -70,9 +144,8 @@ export const computeFees = async (req, res) => {
      } catch (error) {
         res.status(500).json({ message: error.message });
      }
- }
+}
  
-
 export const getBillrunCandidate = async (req, res) => {
     try {
         const getAllBillRunCan = await BillRunCandidate.find();
@@ -83,34 +156,33 @@ export const getBillrunCandidate = async (req, res) => {
     }
 };
 
-function getMonthNameFromDate(date) {
-    const monthOptions = { month: 'long' };
-    return date.toLocaleString('en-US', monthOptions);
-}
+// function getMonthNameFromDate(date) {
+//     const monthOptions = { month: 'long' };
+//     return date.toLocaleString('en-US', monthOptions);
+// }
 
-function determineMonthPeriod(currentDate) {
+// function determineMonthPeriod(currentDate) {
 
-    // First day of the current month
-    let firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    // 15th day of the current month
-    let fifteenthDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 15);
-    // 16th day of the current month
-    let sixteenthDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 16);
-    // End day of the current month (last day of the next month minus one day)
-    let endDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+//     // First day of the current month
+//     let firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+//     // 15th day of the current month
+//     let fifteenthDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 15);
+//     // 16th day of the current month
+//     let sixteenthDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 16);
+//     // End day of the current month (last day of the next month minus one day)
+//     let endDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
-    if (currentDate >= firstDayOfMonth && currentDate <= fifteenthDayOfMonth) {
-        console.log('currentDate::: ', currentDate); 
-        return currentDate;
-    } else if (currentDate >= sixteenthDayOfMonth && currentDate <= endDayOfMonth) {
-        console.log('currentDate::: ', currentDate); 
-        return currentDate;
-    } else {
-        console.log('unknown_period::: ', currentDate); 
-        return 'unknown_period';
-    }
-}
-
+//     if (currentDate >= firstDayOfMonth && currentDate <= fifteenthDayOfMonth) {
+//         console.log('currentDate::: ', currentDate); 
+//         return currentDate;
+//     } else if (currentDate >= sixteenthDayOfMonth && currentDate <= endDayOfMonth) {
+//         console.log('currentDate::: ', currentDate); 
+//         return currentDate;
+//     } else {
+//         console.log('unknown_period::: ', currentDate); 
+//         return 'unknown_period';
+//     }
+// }
 
 export const getBRCByBRId = async (req, res) => { 
 
@@ -291,5 +363,33 @@ export const createDefaultBRC  = async (req, res) => {
     }
 }
 
+export const createBRC  = async (req, res) => {
+
+    try {
+        console.log('createBRCPostman-req-body::: ', req.body);
+
+        let newBillRunCandidate = new BillRunCandidate({
+            host: '64fb2488400f153370f5cd77',
+            client: '64fb24a8400f153370f5cd86',
+            name: 'B1',
+            plan: '6469b244f8628326b81ff5e5',
+            planName: '100GB FIBR',
+            monthlyFee: '1',
+            dueDate: '15th',
+            monthPeriod: '06/01/2023',
+            paymentDate: new Date(),
+            status: 'PAID'
+        });
+
+        await newBillRunCandidate.save();
+        res.status(201).json(newBillRunCandidate);
+    }
+
+    catch (error) {
+
+        console.log('server-controller-client-catch-error: ', error);
+        res.status(404).json({ message: error.message });
+    }
+}
 
 export default router;

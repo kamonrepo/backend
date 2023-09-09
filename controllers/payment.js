@@ -30,15 +30,36 @@ function determineMonthPeriod(currentDate) {
     }
 }
 
+// function addOneMonth(dateString) {
+//     const [year, month] = dateString.split("-");
+//     const originalDate = new Date(year, parseInt(month) - 1); // JS months are 0-based
+//     originalDate.setMonth(originalDate.getMonth() + 1);
+  
+//     const newYear = originalDate.getFullYear();
+//     const newMonth = (originalDate.getMonth() + 1).toString().padStart(2, "0");
+  
+//     return `${newYear}-${newMonth}`;
+// }
+
 function addOneMonth(dateString) {
-    const [year, month] = dateString.split("-");
-    const originalDate = new Date(year, parseInt(month) - 1); // JS months are 0-based
-    originalDate.setMonth(originalDate.getMonth() + 1);
+    // Parse the input date string
+    const parts = dateString.split('/');
+    const month = parseInt(parts[0], 10) - 1; // Months are 0-indexed in JavaScript
+    const day = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
   
-    const newYear = originalDate.getFullYear();
-    const newMonth = (originalDate.getMonth() + 1).toString().padStart(2, "0");
+    // Create a Date object and add one month
+    const date = new Date(year, month + 1, day);
   
-    return `${newYear}-${newMonth}`;
+    // Get the new month, day, and year
+    const newMonth = date.getMonth() + 1; // Adding 1 to convert back to 1-indexed month
+    const newDay = date.getDate();
+    const newYear = date.getFullYear();
+  
+    // Format the output string
+    const formattedDate = `${newMonth.toString().padStart(2, '0')}/${newDay.toString().padStart(2, '0')}/${newYear}`;
+  
+    return formattedDate;
 }
 
 async function findAndUpdateByBRC(brcId, newStatus) {
