@@ -12,6 +12,7 @@ import categoryRoutes from "././routes/services/category.js";
 import planRoutes from "././routes/services/plan.js";
 import reportRoutes from "././routes/report/index.js";
 import paymentRoutes from "././routes/payment.js";
+import postRoutes from "././routes/posts.js";
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/category', categoryRoutes);
 app.use('/plan', planRoutes);
 app.use('/report', reportRoutes);
 app.use('/payment', paymentRoutes);
+app.use('/posts', postRoutes);
 
 const server = http.createServer(app);
 

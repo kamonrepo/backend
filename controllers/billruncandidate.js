@@ -18,22 +18,7 @@ function getCurrentMonthPeriod(date) {
 
 export const computeFees = async (req, res) => { 
     try {
-
-        
-         let correctMonthPeriod = getCurrentMonthPeriod(new Date());
-
-         console.log('correctMonthPeriod::: ', correctMonthPeriod);
-
-        // Calculate total sum of monthlyFee WHERE status="PAID" and group by host
-        // const paidAggregation = await BillRunCandidate.aggregate([
-        //    { $match: { status: "PAID" } },
-        //    {
-        //       $group: {
-        //          _id: "$host",
-        //          totalPaidSum: { $sum: { $toDouble: "$monthlyFee" } }
-        //       }
-        //    }
-        // ]);
+        console.log('computeFees started');
 
         const paidAggregation = await BillRunCandidate.aggregate([
             {
@@ -75,8 +60,7 @@ export const computeFees = async (req, res) => {
                 },
               },
             },
-          ]);
-
+        ]);
 
         // Calculate total sum of monthlyFee WHERE status="NOTPAID" and group by host
         const notPaidAggregation = await BillRunCandidate.aggregate([
@@ -112,14 +96,14 @@ export const computeFees = async (req, res) => {
             {
               $group: {
                 _id: "$host",
-                totalPaidSum: {
+                totalNotPaidSum: {
                   $sum: {
                     $toDouble: "$monthlyFee",
                   },
                 },
               },
             },
-          ]);
+        ]);
   
         // Get bill run names
         const billRunNames = await BillRun.aggregate([
