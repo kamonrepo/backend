@@ -2,6 +2,8 @@ import express from 'express';
 import Payment from '../models/payment.js';
 import AccumulatedPayment from '../models/accumulatedpayment.js';
 import BillRunCandidate from '../models/billruncandidate.js';
+import PostMessage from '../models/postMessage.js';
+import rpt from '../controllers/report/generate.js';
 
 const router = express.Router();
 
@@ -203,7 +205,9 @@ export const updatePayment = async (req, res) => {
                 res.status(404).json({ message: error.message });
             }
 
-        } else  { // payment _id NOT_FOUND -> FIRST TIME CREATION of payment 
+        }
+        
+        else  { // payment _id NOT_FOUND -> FIRST TIME CREATION of payment 
 
            // console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
 
@@ -272,6 +276,42 @@ export const updatePayment = async (req, res) => {
                                                 try {
         
                                                     newBillRunCandidate.save();
+
+                                                    if(newBillRunCandidate) {
+                                                        //generate report
+                                                        let buildPayload = {};
+                                                        let generateBase64 = rpt.generate(buildPayload);
+
+                                                        if(generateBase64) {
+                                                        //upsert on postMessage
+
+                                                            let postMessageContent = {
+                                                                title: "String",
+                                                                message: "String",
+                                                                owner: "String",
+                                                                creator: "String",
+                                                                tags: [],
+                                                                selectedFile: generateBase64,
+                                                                monthPeriod: "String"
+                                                            }
+
+                                                            let post = postMessageContent;
+
+                                                            // const newPostMessage = new PostMessage({ ...post, creator: req.userId, createdAt: new Date().toISOString() });
+                                                            const newPostMessage = new PostMessage({ ...post, createdAt: new Date().toISOString() });
+                                                            console.log('PostMessage done create: ', newPostMessage);
+                                                        
+                                                            try {
+                                                                await newPostMessage.save();
+                                                        
+                                                                res.status(201).json({ isSuccess: 'woop woop'});
+                                                            } catch (error) {
+                                                                res.status(409).json({ message: error.message });
+                                                            }
+
+                                                        }
+
+                                                    }
         
                                                 } catch (error) {
                                                     console.log('catch-newBillRunCandidate.save()-error: ', error);
