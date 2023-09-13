@@ -3,6 +3,7 @@ import pdf from 'html-pdf';
 import Mustache from 'mustache';
 
 export const execute = async (req, res) => {
+    console.log("executeexecuteexecute: ", req);
         try {
             let base64 = await generate(req);
             return(base64);
@@ -16,7 +17,7 @@ export const execute = async (req, res) => {
 
 
 async function generate(req){
-
+    console.log("reqreqreqreqreq: ", req);
     return new Promise(async(resolve, reject) => { 
         
         try{

@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
 const postSchema = mongoose.Schema({
-    title: String,
-    message: String,
-    owner: String,
-    creator: String,
-    tags: [String],
-    selectedFile: String,
-    monthPeriod: String,
+    title: { type: String },
+    message: { type: String },
+    owner: { type: String },
+    creator: { type: String },
+    selectedFile: { type: String },
+    monthPeriod: { type: String },
+    tags: { type: [String], default: [] },
     likes: { type: [String], default: [] },
     comments: { type: [String], default: []},
     createdAt: {
@@ -16,6 +16,4 @@ const postSchema = mongoose.Schema({
     },
 })
 
-var PostMessage = mongoose.model('PostMessage', postSchema);
-
-export default PostMessage;
+export default mongoose.model('PostMessage', postSchema);

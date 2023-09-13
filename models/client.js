@@ -5,6 +5,7 @@ const clientSchema = mongoose.Schema({
     contactNumber:  {type: String, required: true },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'categories'},
     plan: { type: mongoose.Schema.Types.ObjectId, ref: 'plans'},
+    accountNumber: { type: String, required: true },
     planName: {type: String, required: true },
     ipaddr: {type: String, required: true },
     dueDate: {type: String, required: true },

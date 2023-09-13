@@ -1,14 +1,9 @@
-
-import express from 'express';
 import template from '../report/templates/index.js';
 
-
-const router = express.Router();
-
-const generateDoc = async (req, res) => {
+const generateDoc = async (reqBody, res) => {
     try {
 
-        let base64 = await template(req.body);
+        let base64 = await template(reqBody);
         return base64; 
     }
     catch(e) {
@@ -17,12 +12,11 @@ const generateDoc = async (req, res) => {
 
 }
 
-
 export const generate = async (req, res) => {
     try {
 
         console.log('generateDoc-req: ', req.body);
-        let ret = await generateDoc(req)
+        let ret = await generateDoc(req.body)
 
         res.status(200).json(ret);
     } catch (error) {
@@ -30,4 +24,4 @@ export const generate = async (req, res) => {
     }
 };
 
-export default router;
+// export default generate;
