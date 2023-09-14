@@ -72,11 +72,16 @@ export const createSubloc = async (req, res) => {
     }
 }
 
+
 export const createTargetLoc = async (req, res) => {
   
     const targetloc = req.body;
     console.log('createTargetLoc-targetloc-req::: ', targetloc);
-    const newTargetlocation = new Targetlocation(targetloc);
+
+    let tname = targetloc.name;
+    let myCode = tname.substring(0, 3); //get the first 3 char
+
+    const newTargetlocation = new Targetlocation({...targetloc, code: myCode.toUpperCase()});
 
     //if targetloc ceration is success then create bill run. nad use the newly created targetloc id
 

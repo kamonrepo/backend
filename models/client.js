@@ -13,6 +13,7 @@ const clientSchema = mongoose.Schema({
     address: { type: String, required: true },
     status: { type: String, default: 'Active'},
     targetlocId: { type: mongoose.Schema.Types.ObjectId, ref: 'targetlocations'},
+    targetlocCode: { type: String, required: true },
     createdAt: {
         type: Date,
         default: new Date(),

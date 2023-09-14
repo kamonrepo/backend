@@ -22,11 +22,15 @@ function getFirstDayOfMonth(date) {
    return formattedDate;
 }
 
+const generateAccountNo = () => {
+    return 1;
+}
+
 export const createClient  = async (req, res) => {
 
     const client = req.body;
 
-    const newClient = new Client(client);
+    const newClient = new Client({...client, accountNumber: generateAccountNo()});
     try {
 
         await newClient.save();
@@ -44,7 +48,8 @@ export const createClient  = async (req, res) => {
             dueDate: client.dueDate,
             monthPeriod: getFirstDayOfMonth(new Date()),
             status: 'NOTPAID'
-    });
+        });
+        
         await newBillRunCandidate.save();
 
         if(newBillRunCandidate) {
