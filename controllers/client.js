@@ -22,15 +22,45 @@ function getFirstDayOfMonth(date) {
    return formattedDate;
 }
 
-const generateAccountNo = () => {
-    return 1;
+function AccountNoUniqueTimeStamp(date) { // example: "09142023202404"
+    
+    // Get month, day, year, hours, minutes, and seconds
+    let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Month is 0-indexed
+    let day = date.getDate().toString().padStart(2, '0');
+    let year = date.getFullYear().toString();
+
+    let hours = date.getHours().toString().padStart(2, '0');
+    let minutes = date.getMinutes().toString().padStart(2, '0');
+    let seconds = date.getSeconds().toString().padStart(2, '0');
+
+    // Concatenate and return the formatted string
+    return `${month}${day}${year}${hours}${minutes}${seconds}`;
+}
+
+const generateAccountNo = ipaddr => {
+
+    let octets = ipaddr.split('.');
+
+    // Get the 3rd and 4th octet
+    let thirdOctet = octets[2];
+    let fourthOctet = octets[3];
+    let withDash = thirdOctet + '-' + fourthOctet;
+
+    let accountNo = "GST-" + AccountNoUniqueTimeStamp(new Date()) + '-' + withDash;
+
+    console.log('return account number::: ', accountNo.toUpperCase());
+
+    return accountNo.toUpperCase();
 }
 
 export const createClient  = async (req, res) => {
 
     const client = req.body;
 
-    const newClient = new Client({...client, accountNumber: generateAccountNo()});
+    let tlname = req.body.targetloc;
+    let myCode = tlname.substring(0, 3); //get the first 3 char
+
+    const newClient = new Client({...client, accountNumber: generateAccountNo(req.body.ipaddr), targetlocCode: myCode.toUpperCase()});
     try {
 
         await newClient.save();
