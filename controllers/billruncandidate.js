@@ -174,9 +174,9 @@ export const getBRCByBRId = async (req, res) => {
 
    try {
 
-       console.log('backend-BillRunCandidate.find-by-host-brid-request:::: ', hostId); //todododododododododod
+       console.log('todo:::: ', hostId); //todododododododododod
        const brcs = await BillRunCandidate.find({ host: hostId });
-       console.log('backend-BillRunCandidate.find-by-host-brid-BRC-LENGTH:::: ', brcs.length);
+
 
        res.status(200).json(brcs);
 

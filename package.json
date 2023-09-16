@@ -17,10 +17,13 @@
     "express": "^4.17.1",
     "fawn": "^2.1.5",
     "html-pdf": "^3.0.1",
+    "html2canvas": "^1.4.1",
+    "jsdom": "^22.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.17",
     "mustache": "^4.2.0",
     "nodemon": "^2.0.15",
+    "puppeteer": "^21.2.1",
     "socket.io": "^4.1.3"
   }
 }

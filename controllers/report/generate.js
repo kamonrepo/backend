@@ -18,9 +18,9 @@ export const generate = async (req, res) => {
         console.log('generateDoc-req: ', req.body);
         let ret = await generateDoc(req.body)
 
-        res.status(200).json(ret);
+        return ret;
     } catch (error) {
-        res.status(404).json({ message: error.message });
+       return { message: error.message };
     }
 };
 

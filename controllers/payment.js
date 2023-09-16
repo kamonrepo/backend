@@ -3,6 +3,7 @@ import Payment from '../models/payment.js';
 import AccumulatedPayment from '../models/accumulatedpayment.js';
 import BillRunCandidate from '../models/billruncandidate.js';
 import PostMessage from '../models/postMessage.js';
+import Client from '../models/client.js';
 
 import { generate } from '../controllers/report/generate.js';
 
@@ -82,6 +83,23 @@ async function findAndUpdateByBRC(brcId, newStatus) {
         return error;
     }
 }
+
+function getFirstDayOfMonth(date) {
+    // Create a new Date object with the same year and month
+    const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    
+    const options = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour12: false, // Use 24-hour format
+    timeZone: 'Asia/Manila',
+   };
+  
+   const formattedDate = firstDayOfMonth.toLocaleString('en-US', options);
+    
+    return formattedDate;
+  } 
 
 export const updatePayment = async (req, res) => {
 
@@ -185,17 +203,18 @@ export const updatePayment = async (req, res) => {
     
             }
             
-            else  { // payment _id NOT_FOUND -> FIRST TIME CREATION of payment 
-    
-               // console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
+            else  { 
+                 // payment _id NOT_FOUND -> FIRST TIME CREATION of payment 
+                // console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
     
                 //update BRC status by BRCID
                 let executeStatusUpdate = null;
     
                 try {
                     executeStatusUpdate =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[0], { status: 'PAID', paymentDate: new Date() });
-    
+                      
                     if(executeStatusUpdate) {
+                        console.log('BillRunCandidate update done');
     
                         let paymentPayload = { 
                             billrun: brid,
@@ -232,7 +251,6 @@ export const updatePayment = async (req, res) => {
                                             try {
                                                 const brcs = await BillRunCandidate.findById(brcId);
                                                 if(brcs){
-                                                    console.log('brcs::: ', brcs);
                                                     let currentMonthPeriod = brcs.monthPeriod; // string: YYYY-MM 
                                                     let updatedMonthPeriod = addOneMonth(currentMonthPeriod);
             
@@ -254,48 +272,56 @@ export const updatePayment = async (req, res) => {
                                                     try {
             
                                                         newBillRunCandidate.save();
-    
+                                                        console.log('BillRunCandidate save done');
                     
                                                         if(newBillRunCandidate) {
-    
-                                                            // //generate report
-                                                            // let buildPayload = {
-                                                            //     body: {
-                                                            //         header: "GSTECH-LOGO",
-                                                            //         name: clientId,
-                                                            //         accountNumber: "GST-0001",
-                                                            //         planName:  brcs.planName
-                                                            //     }
-                                                            // };
-                                                            // let generateBase64 = await generate(buildPayload);
-                                                            // if(generateBase64) {}
-    
-                                                            //upsert on postMessage
-                                
-                                                                let postMessageContent = {
-                                                                    title: "Account Number",
-                                                                    message: "PAID",
-                                                                    owner: req.body.userFullname,
-                                                                    creator: req.body.userFullname,
-                                                                    monthPeriod: "todo"
-                                                                }
-                                       
-                                                                let newPostMessage = new PostMessage({ ...postMessageContent, createdAt: new Date().toISOString() });
 
-                                                            
-                                                                try {
-                                                                    await newPostMessage.save();
-                                                                    console.log('PostMessage done create: ', newPostMessage);
+                                                            //fetch account no on client model
+                                                            let cl = await Client.findById(clientId);
 
-                                                                    updatedPayments = { isSuccess: true, doneUpsert: 'BRC-ACCPYT-PMSG' };
-    
-                                                                } catch (error) {
-                                                                    console.log('PostMessage upsert error: ', error);
-                                                                    res.status(404).json({ message: error.message });
+                                                            try {
+                                                            //generate report
+                                                            let buildPayload = {
+                                                                body: {
+                                                                    header: "GSTECH-LOGO",
+                                                                    name: clientId,
+                                                                    accountNumber: cl.accountNumber,
+                                                                    planName:  brcs.planName
                                                                 }
-    
-                                                            
-    
+                                                            };
+
+                                                            let generateBase64 = await generate(buildPayload);
+
+                                                             if(generateBase64) {                                                               
+                                                                    //upsert on postMessage
+                                        
+                                                                    let postMessageContent = {
+                                                                        title: "Account Number",
+                                                                        message: "PAID",
+                                                                        owner: req.body.userFullname,
+                                                                        creator: req.body.userFullname,
+                                                                        monthPeriod: getFirstDayOfMonth(new Date()),
+                                                                        selectedFile: generateBase64
+                                                                    }
+                                        
+                                                                    let newPostMessage = new PostMessage({ ...postMessageContent, createdAt: new Date().toISOString() });
+                                                                
+                                                                    try {
+                                                                        await newPostMessage.save();
+                                                                        console.log('PostMessage create done');
+
+                                                                        updatedPayments = { isSuccess: true, doneUpsert: 'BRC-ACCPYT-PMSG' };
+
+                                                                    } catch (error) {
+                                                                        console.log('PostMessage upsert error: ', error);
+                                                                        res.status(404).json({ message: error.message });
+                                                                    }
+                                                             }
+
+                                                            } catch(error) {
+                                                                console.log('generateBase64 error: ', error);
+                                                                res.status(404).json({ message: error.message });
+                                                            }
                                                         }
             
                                                     } catch (error) {
