@@ -4,6 +4,7 @@ import pdf from 'html-pdf';
 import Mustache from 'mustache';
 import html2canvas from 'html2canvas';
 import { JSDOM } from 'jsdom';
+import puppeteer from 'puppeteer';
 
 export const execute = async (req, res) => {
     console.log("report-remplates-execute: ", req);
@@ -46,7 +47,7 @@ async function generate(req){
             let html = Mustache.render(preHtml, reportParam);
 
             // let base64 = await createPDF(html, options);
-            let base64 = await convertHtmlToBase64(fpfp);
+            let base64 = await convertHtmlToImage(fpfp);
 
             resolve(base64);
         }
@@ -56,6 +57,20 @@ async function generate(req){
         }
     });
 }
+
+async function convertHtmlToImage(htmlFilePath) {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+  
+    const fileUrl = `file://${htmlFilePath}`;
+    await page.goto(fileUrl, { waitUntil: 'networkidle0' });
+  
+    const screenshot = await page.screenshot();
+    
+    await browser.close();
+    
+    return screenshot;
+  }
 
 async function convertHtmlToBase64(htmlFilePath) {
     console.log("htmlContent-");
@@ -74,7 +89,7 @@ async function convertHtmlToBase64(htmlFilePath) {
         // Convert the canvas to a data URL (base64 encoded)
         return canvas.toDataURL('image/jpeg');
       });
-  }
+}
 
 function createPDF(html, options){
 	return new Promise((res, rej) => {
@@ -96,7 +111,5 @@ function createPDF(html, options){
         }
     })   
 }
-
-
 
 export default execute;
