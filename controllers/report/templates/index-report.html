@@ -8,75 +8,9 @@
 			font-family: 'Arial';
 			padding: 0px;
 		}
-
-		body{
-			font-family: 'Arial';
-		}
-		
-		p{
-			margin-bottom: 5px;
-		}
-
-	  html{zoom: 0.85;}		
-	  	.dvContainer{
-	  		margin:0 auto !important;
-	  		width:595px; 
-	  		height: 228mm; 
-	  		font-family:Arial, sans-serif !important;
-	  		page-break-after: always;
-	  	}	
-	  	.dvContainer:last-child{page-break-after: avoid;}
-
-	  	.pad3{
-			padding-left:3px;
-			padding-right:3px;
-			padding-top:2px;
-			padding-bottom:2px;
-	  	}
-	  	.f7{
-	  		font-size: 7pt;
-	  	}
-	  	.textLeft{
-	  		text-align: left;
-	  	}
-	  	.textRight{
-	  		text-align: right;
-	  	}
-	  	.textCenter{
-	  		text-align: center;
-	  	}
-	  	.bold{
-	  		font-weight:bold;
-	  	}
-	  	.borderbot
-		{
-			border-bottom: 1px solid;
-		}
-		.clientSign
-		{
-	 		height: 40px;
-	 		width: 120px;
-	 	}
-	 	.agentSign
-	 	{
-			height: 25px;	 		
-	 	}
-	 	.w100
-	 	{
-	 		width: 100%;
-	 	}
-	 	.center
-	 	{
-	 		text-align: center;
-	 	}
-	 	.mtop
-	 	{
-	 		padding-top: 15px;
-	 	}
 	</style>
 </head>
-<body style="font-family:Arial, sans-serif !important;padding:0;margin:0;">
-	<!--HEADER-->
+<body>
 
 	<h1>{{header}}</h1>
 	<br />
@@ -90,12 +24,8 @@
 	<h2>Plan Name:</h2>		
 	<p>{{planName}}</p>
 
-    <div id="pageHeader" style="margin: 0 auto; width:595px;  padding: 10px 30px 0px 30px; font-family:Arial, sans-serif !important;">
-		<table style="width:100%; margin-top: 0px; font-family:Arial, sans-serif !important; font-size:7pt;" cellpadding="0" cellspacing="0">
-			<tr>
-				<td style="text-align: right;">BILLING REFERENCE NO. : XXX-XXX</td>
-			</tr>
-		</table>     
+    <div id="pageHeader">
+	<p>Hello</p>
 	</div>
 
 	<div id="target"></div>
@@ -103,7 +33,7 @@
 	<script>
 		window.onload = function(){
 		}
-		var divTest = document.getElementById("tester");
+		var divTest = document.getElementById("pageHeader");
 
 	</script>
 </body>

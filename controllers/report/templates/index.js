@@ -1,20 +1,15 @@
 import fs from 'fs';
-import path from 'path';
 import pdf from 'html-pdf';
 import Mustache from 'mustache';
-import html2canvas from 'html2canvas';
-import { JSDOM } from 'jsdom';
 import puppeteer from 'puppeteer';
 
 export const execute = async (req, res) => {
-    console.log("report-remplates-execute: ", req);
+
         try {
 
-             let base64 = await generate(req);
-            //const htmlFile = "C:/etc/newnew/backend/controllers/report/templates/index-report.html";
-           // let base64Jpeg = await convertHtmlToBase64(htmlFile).then(base64Image => {console.log('base64Image: OK ', base64Image)}).catch(error => {console.error('base64Image: ERROR ', error)});
+            let base64 = await generate(req);
+         
             return(base64);
-
         }
         catch(e) {
             return e.message;
@@ -22,7 +17,7 @@ export const execute = async (req, res) => {
 }
 
 async function generate(req){
-    console.log("reqreqreqreqreq: ", req);
+
     return new Promise(async(resolve, reject) => { 
         
         try{
@@ -46,8 +41,8 @@ async function generate(req){
             
             let html = Mustache.render(preHtml, reportParam);
 
-            // let base64 = await createPDF(html, options);
-            let base64 = await convertHtmlToImage(fpfp);
+             //let base64 = await createPDF(html, options);
+             let base64 = await convertHtmlToBase64(html);
 
             resolve(base64);
         }
@@ -58,38 +53,44 @@ async function generate(req){
     });
 }
 
-async function convertHtmlToImage(htmlFilePath) {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-  
-    const fileUrl = `file://${htmlFilePath}`;
-    await page.goto(fileUrl, { waitUntil: 'networkidle0' });
-  
-    const screenshot = await page.screenshot();
-    
-    await browser.close();
-    
-    return screenshot;
-  }
-
-async function convertHtmlToBase64(htmlFilePath) {
-    console.log("htmlContent-");
-    const htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
-    console.log("htmlContent: ", htmlContent);
-  
-    // Create a virtual DOM to render the HTML
-    // const dom = new JSDOM(htmlContent);
-    // const window = dom.window;
-  
-    // Use html2canvas to capture the HTML as an image
-    const element = document.querySelector('body'); 
-    // return html2canvas(window.document.body)
-    return html2canvas(element)
-      .then(canvas => {
-        // Convert the canvas to a data URL (base64 encoded)
-        return canvas.toDataURL('image/jpeg');
-      });
+async function convertHtmlToBase64(htmlContent) {
+    try {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.setContent(htmlContent);
+        const screenshot = await page.screenshot({ encoding: 'base64' });
+        await browser.close();
+        return screenshot;
+    } catch (error) {
+        console.error('Error converting HTML to base64:', error);
+        throw error;
+    }
 }
+
+// async function convertHtmlToBase64(htmlContent) {
+//     try {
+
+//         const dom = new JSDOM(htmlContent);
+//         const canvas = await html2canvas(dom.window.document.body);
+//         const base64Image = canvas.toDataURL('image/jpeg');
+//         return base64Image;
+
+//     } catch (error) {
+//         console.error('Error converting HTML to base64:', error);
+//         throw error;
+//     }
+// }
+
+// async function convertHtmlToBase64(htmlContent) {
+//     try {
+//       const canvas = await html2canvas(htmlContent);
+//       const base64Image = canvas.toDataURL('image/jpeg');
+//       return base64Image;
+//     } catch (error) {
+//       console.error('Error converting HTML to base64:', error);
+//       throw error;
+//     }
+// }
 
 function createPDF(html, options){
 	return new Promise((res, rej) => {
