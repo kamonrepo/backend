@@ -4,6 +4,7 @@ import AccumulatedPayment from '../models/accumulatedpayment.js';
 import BillRunCandidate from '../models/billruncandidate.js';
 import PostMessage from '../models/postMessage.js';
 import Client from '../models/client.js';
+import Soa from '../models/soa.js';
 
 import { generate } from '../controllers/report/generate.js';
 
@@ -99,7 +100,7 @@ function getFirstDayOfMonth(date) {
    const formattedDate = firstDayOfMonth.toLocaleString('en-US', options);
     
     return formattedDate;
-  } 
+} 
 
 export const updatePayment = async (req, res) => {
 
@@ -296,21 +297,41 @@ export const updatePayment = async (req, res) => {
                                                                     //upsert on postMessage
                                         
                                                                     let postMessageContent = {
-                                                                        title: "Account Number",
+                                                                        title: cl.accountNumber,
                                                                         message: "PAID",
                                                                         owner: req.body.userFullname,
                                                                         creator: req.body.userFullname,
                                                                         monthPeriod: getFirstDayOfMonth(new Date()),
-                                                                        selectedFile: generateBase64
+                                                                        selectedFile: 'todo'
                                                                     }
                                         
                                                                     let newPostMessage = new PostMessage({ ...postMessageContent, createdAt: new Date().toISOString() });
                                                                 
                                                                     try {
+                                                                        
                                                                         await newPostMessage.save();
                                                                         console.log('PostMessage create done');
 
-                                                                        updatedPayments = { isSuccess: true, doneUpsert: 'BRC-ACCPYT-PMSG' };
+                                                                        let soaContent = {
+                                                                            brid: brid,
+                                                                            client: clientId,
+                                                                            dueDate: brcs.dueDate,
+                                                                            monthPeriod: getFirstDayOfMonth(new Date()),
+                                                                            b64Jpeg: generateBase64
+                                                                        }
+
+                                                                        let newSoa = new Soa({ ...soaContent, createdAt: new Date().toISOString() });
+
+                                                                        try {
+                                                                            await newSoa.save();
+                                                                            console.log('SOA create success!');
+
+                                                                        } catch (error) {
+                                                                            console.log('SOA upsert error: ', error);
+                                                                            res.status(404).json({ message: error.message });
+                                                                        }
+
+                                                                        updatedPayments = { isSuccess: true, doneUpsert: 'MODEL-SUCCES-UPSET-DB-BRC-ACCPYT-PMSG-SOA' };
 
                                                                     } catch (error) {
                                                                         console.log('PostMessage upsert error: ', error);
