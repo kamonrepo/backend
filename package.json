@@ -21,6 +21,7 @@
     "jsdom": "^22.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.17",
+    "multer": "^1.4.5-lts.1",
     "mustache": "^4.2.0",
     "nodemon": "^2.0.15",
     "puppeteer": "^21.2.1",

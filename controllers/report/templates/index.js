@@ -58,7 +58,10 @@ async function convertHtmlToBase64(htmlContent) {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.setContent(htmlContent);
-        const screenshot = await page.screenshot({ encoding: 'base64' });
+
+        // const screenshot = await page.screenshot({ encoding: 'base64' });
+        const screenshot = await page.screenshot({ encoding: 'base64', type: 'jpeg', quality: 70 });
+
         await browser.close();
         return screenshot;
     } catch (error) {

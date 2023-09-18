@@ -2,13 +2,12 @@ import express from 'express';
 import mongoose from 'mongoose';
 import PostMessage from '../models/postMessage.js';
 
-
-//these controllers will sent back to the front end <when front end dispatch an action>
-
 const router = express.Router();
 
 export const getPosts = async (req, res) => { 
-    const { page } = req.query;
+    console.log('ctrl-getPosts-init');
+     //const { page } = req.query; //old
+     const { page, selectedFile  } = req.body;
      //although the page on the front end is integer, when it passes to req.query
      //it became string, so -> convert into number
 
@@ -21,25 +20,25 @@ export const getPosts = async (req, res) => {
 
          // -1 will give us the newest posts first
         const posts = await PostMessage.find().sort({ _id: -1}).limit(LIMIT).skip(startIndex); 
-
-        // res.json({ data: posts, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT)});
-
+        
+        console.log('ctrl-getPosts: ', posts.length);
         res.status(200).json({ data: posts, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT)});
+
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
 }
 
-// QUERY -> /posts?page=1 -> page = 1
-// PARAMS -> /posts/123 -> id = 123
-
 export const getPostsBySearch = async (req, res) => {
+    console.log('ctrl-getPostsBySearch-init');
+    const { searchQuery, tags } = req.query;
 
-    const { searchQuery, tags} = req.query
+
     try {
         const title = new RegExp(searchQuery, 'i')
 
         const posts = await PostMessage.find({ $or: [ { title }, { tags : { $in: tags.split(',')}}]});
+        console.log('ctrl-getPostsBySearch: ', posts.length);
 
         res.json({ data: posts}); //this return will send to front end
     } catch(error) {
@@ -48,10 +47,13 @@ export const getPostsBySearch = async (req, res) => {
 }
 
 export const getPost = async (req, res) => { 
+    console.log('ctrl-getPost-init');
+
     const { id } = req.params;
 
     try {
         const post = await PostMessage.findById(id);
+        console.log('ctrl-getPost', post.length);
         
         res.status(200).json(post);
     } catch (error) {
