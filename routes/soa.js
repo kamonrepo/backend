@@ -1,9 +1,9 @@
 import express from 'express';
-import { getSoa } from '../controllers/soa.js';
+import { getSoaByBRCID, getSoas } from '../controllers/soa.js';
 
 const router = express.Router();
 
-router.get('/', getSoa);
-// router.post('/', createGroup);
+router.get('/', getSoas);
+router.get('/:id', getSoaByBRCID);
 
 export default router;

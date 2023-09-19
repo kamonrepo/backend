@@ -3,7 +3,19 @@ import Soa from '../models/soa.js';
 
 const router = express.Router();
 
-export const getSoaById = async (req, res) => {
+
+export const getSoas = async (req, res) => {
+    try {
+        const getAllSoas = await Soa.find();
+  
+        res.status(200).json(getAllSoas);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+
+export const getSoaByBRCID = async (req, res) => {
     try {
         const SOA = await Soa.findById(req.body.id);
 

@@ -310,14 +310,16 @@ export const updatePayment = async (req, res) => {
                                                                     try {
                                                                         
                                                                         await newPostMessage.save();
-                                                                        console.log('PostMessage create done');
+                                                                        console.log('PostMessage create done'); 
 
                                                                         let soaContent = {
-                                                                            brcid: newBillRunCandidate._id,
+                                                                            brcid: brcId,
                                                                             pmsg: newPostMessage._id,
                                                                             client: clientId,
                                                                             dueDate: brcs.dueDate,
                                                                             monthPeriod: getFirstDayOfMonth(new Date()),
+                                                                            paymentDate: new Date(),
+                                                                            mode: 'MANUAL',
                                                                             b64Jpeg: generateBase64
                                                                         }
 
