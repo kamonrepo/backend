@@ -313,7 +313,8 @@ export const updatePayment = async (req, res) => {
                                                                         console.log('PostMessage create done');
 
                                                                         let soaContent = {
-                                                                            brid: brid,
+                                                                            brcid: newBillRunCandidate._id,
+                                                                            pmsg: newPostMessage._id,
                                                                             client: clientId,
                                                                             dueDate: brcs.dueDate,
                                                                             monthPeriod: getFirstDayOfMonth(new Date()),

@@ -36,7 +36,6 @@ export const getTargetlocs  = async (req, res) => {
     }
 }
 
-
 export const createGroup  = async (req, res) => {
 
     const group = req.body;
@@ -71,7 +70,6 @@ export const createSubloc = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
-
 
 export const createTargetLoc = async (req, res) => {
   
