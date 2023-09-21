@@ -2,6 +2,7 @@ import fs from 'fs';
 import pdf from 'html-pdf';
 import Mustache from 'mustache';
 import puppeteer from 'puppeteer';
+import path from 'path'
 
 export const execute = async (req, res) => {
 
@@ -44,6 +45,13 @@ async function generate(req){
              //let base64 = await createPDF(html, options);
              let base64 = await convertHtmlToBase64(html);
 
+             //jpeg 
+             let myFilename = `../../../reports/jpeg/${req.accountNumber}.jpg`;
+             console.log('myFilename::: ', myFilename);
+
+             let myJpeg = await convertHtmlToJpeg(html, `fsys/jpeg/${req.accountNumber}.jpg`);
+
+
             resolve(base64);
         }
         catch(e){
@@ -53,14 +61,41 @@ async function generate(req){
     });
 }
 
+async function convertHtmlToJpeg(htmlContent, fileName) {
+
+    try {
+        
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+      
+        await page.setContent(htmlContent);
+
+        // Ensure the directory exists
+        const directory = path.dirname(fileName);
+
+        //fs.mkdir(directory, { recursive: true });
+        // Use promise-based version of fs.mkdir
+        await fs.promises.mkdir(directory, { recursive: true });
+
+        await page.screenshot({ path: fileName, type: 'jpeg', quality: 90 });
+      
+        await browser.close();
+
+    } catch (error) {
+        console.error('Error converting HTML to Jpeg:', error);
+        throw error;
+    }
+
+}
+
 async function convertHtmlToBase64(htmlContent) {
     try {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
         await page.setContent(htmlContent);
 
-        // const screenshot = await page.screenshot({ encoding: 'base64' });
-        const screenshot = await page.screenshot({ encoding: 'base64', type: 'jpeg', quality: 70 });
+         const screenshot = await page.screenshot({ encoding: 'base64' });
+        //const screenshot = await page.screenshot({ encoding: 'base64', type: 'jpeg', quality: 70 });
 
         await browser.close();
         return screenshot;
