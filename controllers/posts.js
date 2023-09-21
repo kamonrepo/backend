@@ -5,9 +5,9 @@ import PostMessage from '../models/postMessage.js';
 const router = express.Router();
 
 export const getPosts = async (req, res) => { 
-    console.log('ctrl-getPosts-init');
-     //const { page } = req.query; //old
-     const { page, selectedFile  } = req.body;
+    console.log('ctrl-getPosts-init-func()');
+     const { page } = req.query; //old
+    // const { page, selectedFile  } = req.body;
      //although the page on the front end is integer, when it passes to req.query
      //it became string, so -> convert into number
 
@@ -21,7 +21,7 @@ export const getPosts = async (req, res) => {
          // -1 will give us the newest posts first
         const posts = await PostMessage.find().sort({ _id: -1}).limit(LIMIT).skip(startIndex); 
         
-        console.log('ctrl-getPosts: ', posts.length);
+        console.log('ctrl-getPosts-length: ', posts.length);
         res.status(200).json({ data: posts, currentPage: Number(page), numberOfPages: Math.ceil(total / LIMIT)});
 
     } catch (error) {
