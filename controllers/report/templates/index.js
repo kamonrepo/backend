@@ -24,17 +24,17 @@ async function generate(req){
         try{
 
             let reportParam = req;
-            let options = { 
-                "orientation": "portrait",
-                "header": {
-                    "height": "13mm",
-                    "contents": {}
-                },
-                "footer": {
-                    "height": "20mm",
-                    "contents": {}
-                },
-            };
+            // let options = { 
+            //     "orientation": "portrait",
+            //     "header": {
+            //         "height": "13mm",
+            //         "contents": {}
+            //     },
+            //     "footer": {
+            //         "height": "20mm",
+            //         "contents": {}
+            //     },
+            // };
 
             const fpfp = "C:/etc/newnew/backend/controllers/report/templates/index-report.html";
 
@@ -43,16 +43,13 @@ async function generate(req){
             let html = Mustache.render(preHtml, reportParam);
 
              //let base64 = await createPDF(html, options);
-             let base64 = await convertHtmlToBase64(html);
+             //let base64 = await convertHtmlToBase64(html);
 
-             //jpeg 
-             let myFilename = `../../../reports/jpeg/${req.accountNumber}.jpg`;
-             console.log('myFilename::: ', myFilename);
+             let myJpeg = await convertHtmlToJpeg(html, `C:/etc/newnew/backend/fsys/jpeg/${req.accountNumber}.jpg`,`${req.accountNumber}.jpg`);
 
-             let myJpeg = await convertHtmlToJpeg(html, `fsys/jpeg/${req.accountNumber}.jpg`);
+             console.log('myJpeg-convertHtmlToJpeg-RESP::: ', myJpeg);
 
-
-            resolve(base64);
+            resolve(myJpeg);
         }
         catch(e){
             console.log("ERR: ", e);
@@ -61,7 +58,7 @@ async function generate(req){
     });
 }
 
-async function convertHtmlToJpeg(htmlContent, fileName) {
+async function convertHtmlToJpeg(htmlContent, filePath, fileName) {
 
     try {
         
@@ -71,15 +68,17 @@ async function convertHtmlToJpeg(htmlContent, fileName) {
         await page.setContent(htmlContent);
 
         // Ensure the directory exists
-        const directory = path.dirname(fileName);
+        const directory = path.dirname(filePath);
 
-        //fs.mkdir(directory, { recursive: true });
-        // Use promise-based version of fs.mkdir
+        console.error('directory directory! ', directory);
         await fs.promises.mkdir(directory, { recursive: true });
 
-        await page.screenshot({ path: fileName, type: 'jpeg', quality: 90 });
+        await page.screenshot({ path: filePath, type: 'jpeg', quality: 90 });
       
         await browser.close();
+
+        
+        return { filePath , fileName };
 
     } catch (error) {
         console.error('Error converting HTML to Jpeg:', error);

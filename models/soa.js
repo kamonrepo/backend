@@ -13,6 +13,9 @@ const accuPaymentSchema = mongoose.Schema({
     mode: { type: String },
     b64Jpeg: { type: String },
     b64Pdf: { type: String },
+    fileId: { type: String },
+    filename: { type: String },
+    filepath: { type: String },
     status: { type: String },
     createdAt: {
         type: Date,

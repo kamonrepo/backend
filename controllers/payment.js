@@ -291,6 +291,7 @@ export const updatePayment = async (req, res) => {
                                                                 }
                                                             };
 
+                                                            // let generateBase64 = await generate(buildPayload);
                                                             let generateBase64 = await generate(buildPayload);
 
                                                              if(generateBase64) {                                                               
@@ -310,17 +311,19 @@ export const updatePayment = async (req, res) => {
                                                                     try {
                                                                         
                                                                         await newPostMessage.save();
-                                                                        console.log('PostMessage create done'); 
+                                                                        console.log('PostMessage create done ', newPostMessage._id); 
 
                                                                         let soaContent = {
                                                                             brcid: brcId,
-                                                                            pmsg: newPostMessage._id,
+                                                                            pmsgid: newPostMessage._id,
                                                                             client: clientId,
                                                                             dueDate: brcs.dueDate,
                                                                             monthPeriod: getFirstDayOfMonth(new Date()),
                                                                             paymentDate: new Date(),
                                                                             mode: 'MANUAL',
-                                                                            b64Jpeg: generateBase64
+                                                                            fileId: `JPEG-${Date.now()}`,
+                                                                            filename: generateBase64.fileName,
+                                                                            filepath: generateBase64.filePath
                                                                         }
 
                                                                         let newSoa = new Soa({ ...soaContent, createdAt: new Date().toISOString() });

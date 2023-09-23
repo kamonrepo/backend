@@ -32,7 +32,8 @@ app.use('/plan', planRoutes);
 app.use('/report', reportRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/posts', postRoutes);
-app.use('/soa', soaRoutes);
+// app.use('/soa', express.static('fsys/jpeg'), soaRoutes);
+ app.use('/soa', soaRoutes);
 
 const server = http.createServer(app);
 
