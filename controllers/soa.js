@@ -26,18 +26,21 @@ export const getSoaByPMSGID = async (req, res) => {
           if (err || !file) {
             return res.status(404).json({ error: 'getSoaByPMSGID - File not found' });
           }
-      
-          //send the actual jpeg file/binary
-         const filePath = file.filepath;
-        //res.status(200).sendFile(filePath);
+          const filename = file.filename;
+          res.status(200).json(filename);
 
-            // read the target file and send to the client.
-            fs.readFile(filePath, (error, data) => {
-                if (error) return
-                
-                res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-                res.end(data, 'utf8');
-            })
+        //send the actual jpeg file/binary
+        //  const filePath = file.filepath;
+        //  console.log('sendFile HEYYYY!!!');
+        //  res.status(200).sendFile(filePath);
+
+        // read the target file and send to the client.
+        //  fs.readFile(filePath, (error, data) => {
+        //     if (error) return
+            
+        //     res.writeHead(200, { 'Content-Type': 'image/jpeg' });
+        //     res.end(data, 'utf8');
+        // })
         });
 
     } catch (error) {

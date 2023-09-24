@@ -31,7 +31,7 @@ async function generate(req){
             
             let html = Mustache.render(preHtml, reportParam);
 
-             let myJpeg = await convertHtmlToJpegAndSaveToFsysFolder(html, `C:/etc/newnew/backend/fsys/jpeg/${req.accountNumber}.jpg`,`${req.accountNumber}.jpg`);
+             let myJpeg = await convertHtmlToJpegAndSaveToFsysFolder(html, `C:/etc/newnew/backend/images/${req.accountNumber}.jpg`,`${req.accountNumber}.jpg`);
 
              console.log('myJpeg-convertHtmlToJpeg-RESP::: ', myJpeg);
 
