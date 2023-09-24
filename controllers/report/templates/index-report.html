@@ -1,40 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<title>Report Table</title>
-	<style type="text/css">
-		* {
-			margin: 0px;
-			font-family: 'Arial';
-			padding: 0px;
-		}
-	</style>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+h2 {
+  text-align: center;
+}
+
+#tbOnePointOne {
+  border: 1px solid black;
+}
+
+#tbOnePointOneWithGrey {
+  border: 1px solid black;
+  background-color: lightslategray
+}
+
+img {
+	align-content: center;
+}
+
+</style>
 </head>
 <body>
 
-	<h1>{{header}}</h1>
-	<br />
+<img src="gs-head.jpg" alt="gs-header">
 
-	<h2>Registered name:</h2>		
-	<p>{{name}}</p>
+<table id='tbOne'>
+  <tr>
+    <th id='tbOnePointOneWithGrey'>BILLING INFORMATIONS</th>
+    <th></th>
+  </tr>
+  
+  <tr>
+    <td id='tbOnePointOne'>
+      <table>
+          <tr>
+            <td>Statement Date:</td>
+            <td>{{statementDate}}</td>
+          </tr>
+          <tr>
+            <td>Contact Number:</td>
+            <td>{{contactNumber}}</td>
+          </tr>
+          <tr>
+            <td>Account Number:</td>
+            <td>{{accountNumber}}</td>
+          </tr>          
+      </table>
+    </td>
+    
+    <td>
+      <table>
+        <tr>
+          <td>&nbsp</td>
+        </tr>
+        <tr>
+          <td>{{clientName}}</td>
+        </tr>
+        <tr>
+          <td>{{clientAddress}}</td>
+        </tr>
+      </table>
+    </td>
+    
+  </tr>
+</table>
 
-	<h2>Account Number:</h2>		
-	<p>{{accountNumber}}</p>
+<br/>
+<table id='tbTwo'>
+  <tr>
+    <th>PLAN</th>
+    <th>TYPE</th>
+    <th>DESCRIPTIONS</th>
+    <th>SUB TOTAL</th>
+  </tr>
+  
+  <tr>
+    <td>{{plan}}</td>
+    <td>{{type}}</td>
+    <td>{{descriptions}}</td>
+    <td>{{subTotal}}</td>
+    
+  </tr>
+</table>
 
-	<h2>Plan Name:</h2>		
-	<p>{{planName}}</p>
+<br/>
 
-    <div id="pageHeader">
-	<p>Hello</p>
-	</div>
+<table id='tbThree'>
+  <tr>
+    <th></th>
+    <th></th>
+  </tr>
+  
+  <tr>
+    <td>
+      <table id='tbThreePointOne'>
+          <tr>
+            <td>Payment Option:</td>
+            <td>{{paymentOption}}</td>
+          </tr>       
+      </table>
+    </td>
+    
+    <td>
+      <table id='tbThreePointTwo'>
+        <tr>
+          <th>&nbsp</th>
+          <th>&nbsp</th>
+        </tr>
+        <tr>
+          <td>BILLING REFERENCE No.</td>
+          <td>{{billingReferenceNo}}</td>
+        </tr>
+        <tr>
+          <td>ACCOUNT STATUS</td>        
+          <td>{{accountStatus}}</td>
+        </tr>
+        <tr>
+          <td>Payment Date</td>        
+          <td>{{paymentDate}}</td>
+        </tr>
+         <tr>
+          <td>Due Date</td>        
+          <td>{{dueDate}}</td>
+        </tr>     
+        <tr>
+          <td>Sub Total</td>        
+          <td>{{paymentDate}}</td>
+        </tr>   
+        <tr>
+          <td>Discount / Others</td>        
+          <td>{{discountOthers}}</td>
+        </tr>
+        
+        <tr>
+          <td>TOTAL AMOUNT TO PAY</td>        
+          <td>{{totalAmtToPay}}</td>
+        </tr>
+      </table>
+    </td>
+    
+  </tr>
+</table>
 
-	<div id="target"></div>
-
-	<script>
-		window.onload = function(){
-		}
-		var divTest = document.getElementById("pageHeader");
-
-	</script>
 </body>
 </html>
