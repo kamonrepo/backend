@@ -24,28 +24,14 @@ async function generate(req){
         try{
 
             let reportParam = req;
-            // let options = { 
-            //     "orientation": "portrait",
-            //     "header": {
-            //         "height": "13mm",
-            //         "contents": {}
-            //     },
-            //     "footer": {
-            //         "height": "20mm",
-            //         "contents": {}
-            //     },
-            // };
 
-            const fpfp = "C:/etc/newnew/backend/controllers/report/templates/index-report.html";
+            const defaultTemplate = "C:/etc/newnew/backend/controllers/report/templates/index-report.html";
 
-            let preHtml = fs.readFileSync(fpfp, 'utf8');
+            let preHtml = fs.readFileSync(defaultTemplate, 'utf8');
             
             let html = Mustache.render(preHtml, reportParam);
 
-             //let base64 = await createPDF(html, options);
-             //let base64 = await convertHtmlToBase64(html);
-
-             let myJpeg = await convertHtmlToJpeg(html, `C:/etc/newnew/backend/fsys/jpeg/${req.accountNumber}.jpg`,`${req.accountNumber}.jpg`);
+             let myJpeg = await convertHtmlToJpegAndSaveToFsysFolder(html, `C:/etc/newnew/backend/fsys/jpeg/${req.accountNumber}.jpg`,`${req.accountNumber}.jpg`);
 
              console.log('myJpeg-convertHtmlToJpeg-RESP::: ', myJpeg);
 
@@ -58,7 +44,8 @@ async function generate(req){
     });
 }
 
-async function convertHtmlToJpeg(htmlContent, filePath, fileName) {
+
+async function convertHtmlToJpegAndSaveToFsysFolder(htmlContent, filePath, fileName) {
 
     try {
         
@@ -81,7 +68,7 @@ async function convertHtmlToJpeg(htmlContent, filePath, fileName) {
         return { filePath , fileName };
 
     } catch (error) {
-        console.error('Error converting HTML to Jpeg:', error);
+        console.error('Error convertHtmlToJpegAndSaveToFsysFolder', error);
         throw error;
     }
 
