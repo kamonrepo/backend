@@ -5,6 +5,7 @@ import BillRunCandidate from '../models/billruncandidate.js';
 import PostMessage from '../models/postMessage.js';
 import Client from '../models/client.js';
 import Soa from '../models/soa.js';
+import Category from '../models/services/category.js';
 
 import { generate } from '../controllers/report/generate.js';
 
@@ -102,6 +103,11 @@ function getFirstDayOfMonth(date) {
     return formattedDate;
 } 
 
+function formatDateManila(date) {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Manila' };
+    return date.toLocaleDateString('en-US', options);
+  }
+
 export const updatePayment = async (req, res) => {
 
     let updatedPayments = null;
@@ -111,10 +117,9 @@ export const updatePayment = async (req, res) => {
         if(req.body.isPaid == true) { // then update to UNPAID
 
             let brid = req.body.selectedBr;
-            let brcId = req.body.selectedIDs[0];
-            let toUnpaidFee = req.body.selectedMFs[0];
+            //let brcId = req.body.selectedIDs[0];
+            //let toUnpaidFee = req.body.selectedMFs[0];
             let clientId = req.body.selectedBRCClient[0];
-            let determinePeriod = determineMonthPeriod(new Date());
     
             const _getPaymentBy_BRID_CLIENT_ID = await Payment.find({ billrun: brid, client: clientId }); 
             if(_getPaymentBy_BRID_CLIENT_ID.length !== 0) { //payment _id FOUND -> UPDATE by payment Id
@@ -163,6 +168,7 @@ export const updatePayment = async (req, res) => {
               //console.log('updatePayment-UPDATE-TO-PAID-req.body: ', req.body);
     
             let brid = req.body.selectedBr;
+            //let clientName = req.body.selectedBr;
             let brcId = req.body.selectedIDs[0];
             let totP = req.body.selectedMFs[0];
             let clientId = req.body.selectedBRCClient[0];
@@ -264,7 +270,7 @@ export const updatePayment = async (req, res) => {
                                                         monthlyFee: brcs.monthlyFee,
                                                         dueDate: brcs.dueDate,
                                                         monthPeriod: updatedMonthPeriod, 
-                                                        paymentDate: new Date(),
+                                                        paymentDate: formatDateManila(new Date()),
                                                         status: 'NOTPAID'
                                                     }
             
@@ -279,15 +285,28 @@ export const updatePayment = async (req, res) => {
 
                                                             //fetch account no on client model
                                                             let cl = await Client.findById(clientId);
+                                                            let serviceCateg = await Category.findById(cl.category);
 
                                                             try {
                                                             //generate report
+                                                            let discount = 0; //tododo ? san trigger ng discount ? prior payment ? 
+                                                            let subTotal = parseFloat(newBillRunCandidate.monthlyFee);
+                                                            let computeTATP = subTotal - parseFloat(discount);
+
                                                             let buildPayload = {
                                                                 body: {
-                                                                    header: "GSTECH-LOGO",
-                                                                    name: clientId,
+                                                                    clientName: cl.name,
+                                                                    clientAddress: cl.address,
+                                                                    contactNumber: cl.contactNumber,
                                                                     accountNumber: cl.accountNumber,
-                                                                    planName:  brcs.planName
+                                                                    accountStatus: cl.status,
+                                                                    planName:  brcs.planName,
+                                                                    statementDate: newBillRunCandidate.paymentDate,
+                                                                    billingReferenceNo: 'todo',
+                                                                    type: serviceCateg.category,
+                                                                    descriptions: 'N/A',
+                                                                    subTotal: subTotal,
+                                                                    totalAmtToPay: computeTATP
                                                                 }
                                                             };
 

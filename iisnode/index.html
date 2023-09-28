@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>iisnode logs</title>
+    <style type="text/css">
+        body
+        {
+            font-family: "Trebuchet MS" , Arial, Helvetica, sans-serif;
+        }
+        table
+        {
+            border-collapse: collapse;
+        }
+        td, th
+        {
+            border: 1px solid lightgray;
+            padding: 3px 7px 2px 7px;
+        }
+        th
+        {
+            text-align: left;
+            padding-top: 5px;
+            padding-bottom: 4px;
+            background-color: Gray;
+            color: #ffffff;
+        }
+        td.stderr
+        {
+            color: Red;
+        }
+    </style>
+</head>
+<body>
+    <table id="logFilesTable">
+        <tr>
+            <th>
+                Computer name
+            </th>
+            <th>
+                PID
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Created
+            </th>
+            <th>
+                Link
+            </th>
+        </tr>
+    </table>
+    <p id="lastUpdated"></p>
+    <script type="text/javascript">
+
+        // this is replaced with actual data at runtime by code in interceptor.js
+        var logFiles = [{"file":"DESKTOP-KRMRRT3-10256-stderr-1695680526319.txt","computername":"DESKTOP-KRMRRT3","pid":10256,"type":"stderr","created":1695680526319},{"file":"DESKTOP-KRMRRT3-10620-stderr-1695680530217.txt","computername":"DESKTOP-KRMRRT3","pid":10620,"type":"stderr","created":1695680530217},{"file":"DESKTOP-KRMRRT3-11280-stderr-1695679314609.txt","computername":"DESKTOP-KRMRRT3","pid":11280,"type":"stderr","created":1695679314609},{"file":"DESKTOP-KRMRRT3-11732-stderr-1695680366793.txt","computername":"DESKTOP-KRMRRT3","pid":11732,"type":"stderr","created":1695680366793},{"file":"DESKTOP-KRMRRT3-11972-stderr-1695686432789.txt","computername":"DESKTOP-KRMRRT3","pid":11972,"type":"stderr","created":1695686432789},{"file":"DESKTOP-KRMRRT3-12552-stderr-1695680529880.txt","computername":"DESKTOP-KRMRRT3","pid":12552,"type":"stderr","created":1695680529880},{"file":"DESKTOP-KRMRRT3-12588-stderr-1695680528634.txt","computername":"DESKTOP-KRMRRT3","pid":12588,"type":"stderr","created":1695680528634},{"file":"DESKTOP-KRMRRT3-13196-stderr-1695680527779.txt","computername":"DESKTOP-KRMRRT3","pid":13196,"type":"stderr","created":1695680527779},{"file":"DESKTOP-KRMRRT3-13812-stderr-1695680526608.txt","computername":"DESKTOP-KRMRRT3","pid":13812,"type":"stderr","created":1695680526608},{"file":"DESKTOP-KRMRRT3-14300-stderr-1695680366457.txt","computername":"DESKTOP-KRMRRT3","pid":14300,"type":"stderr","created":1695680366457},{"file":"DESKTOP-KRMRRT3-1520-stderr-1695680528918.txt","computername":"DESKTOP-KRMRRT3","pid":1520,"type":"stderr","created":1695680528918},{"file":"DESKTOP-KRMRRT3-16500-stderr-1695684371998.txt","computername":"DESKTOP-KRMRRT3","pid":16500,"type":"stderr","created":1695684371998},{"file":"DESKTOP-KRMRRT3-16908-stderr-1695684371587.txt","computername":"DESKTOP-KRMRRT3","pid":16908,"type":"stderr","created":1695684371587},{"file":"DESKTOP-KRMRRT3-2448-stderr-1695679314303.txt","computername":"DESKTOP-KRMRRT3","pid":2448,"type":"stderr","created":1695679314303},{"file":"DESKTOP-KRMRRT3-3244-stderr-1695679254981.txt","computername":"DESKTOP-KRMRRT3","pid":3244,"type":"stderr","created":1695679254981},{"file":"DESKTOP-KRMRRT3-3856-stderr-1695679254381.txt","computername":"DESKTOP-KRMRRT3","pid":3856,"type":"stderr","created":1695679254381},{"file":"DESKTOP-KRMRRT3-3916-stderr-1695679254077.txt","computername":"DESKTOP-KRMRRT3","pid":3916,"type":"stderr","created":1695679254077},{"file":"DESKTOP-KRMRRT3-4648-stderr-1695679255335.txt","computername":"DESKTOP-KRMRRT3","pid":4648,"type":"stderr","created":1695679255335},{"file":"DESKTOP-KRMRRT3-5320-stderr-1695686432462.txt","computername":"DESKTOP-KRMRRT3","pid":5320,"type":"stderr","created":1695686432462},{"file":"DESKTOP-KRMRRT3-7224-stderr-1695679253380.txt","computername":"DESKTOP-KRMRRT3","pid":7224,"type":"stderr","created":1695679253380},{"file":"DESKTOP-KRMRRT3-9760-stderr-1695680527498.txt","computername":"DESKTOP-KRMRRT3","pid":9760,"type":"stderr","created":1695680527498}];
+        var lastUpdated = 1695686432814;
+        var date = new Date();
+
+        date.setTime(lastUpdated);
+        document.getElementById('lastUpdated').innerHTML = 'Index was last updated ' + date;
+
+        logFiles.sort(function (a, b) {
+            return b.created - a.created;
+        });
+
+        var logFilesTable = document.getElementById("logFilesTable");
+        for (var i = 0; i < logFiles.length; i++) {
+            var logFile = logFiles[i];
+            date.setTime(logFile.created);
+            var row = logFilesTable.insertRow(-1);
+            var computerNameCell = row.insertCell(0);
+            var pidCell = row.insertCell(1);
+            var typeCell = row.insertCell(2);
+            var dateCell = row.insertCell(3);
+            var logCell = row.insertCell(4);
+            computerNameCell.innerHTML = logFile.computername;
+            pidCell.innerHTML = logFile.pid.toString();
+            typeCell.innerHTML = logFile.type;
+            typeCell.setAttribute('class', logFile.type);
+            dateCell.innerHTML = date.toString();
+            logCell.innerHTML = '<a href="' + logFile.file + '">log</a>';
+        };
+
+    </script>
+</body>
+</html>
