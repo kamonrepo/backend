@@ -18,19 +18,49 @@ h2 {
 }
 
 #tbOnePointOne {
-  border: 1px solid black;
+  border: 3px solid black;
 }
 
-#tbOnePointOneWithGrey {
-  border: 1px solid black;
+#tbOne {
+	font-size: small;
+    width: 100%;
+}
+
+#tbTwo {
+	font-size: small;
+}
+
+#tbOnePointOneGreyHeader {
+  border: 3px solid black;
   background-color: lightslategray
 }
 
 img {
 	height: 111px;
-	display: block; /* Set the image to block-level element */
-	margin: auto; /* Center the block-level element */
+	display: block; 
+	margin: auto; 
 }
+
+#tdRight {
+  text-align: right;
+}
+
+#tdCenter {
+  text-align: center;
+}
+
+#test {
+    margin-left: 333px
+}
+
+#tbPytOpt {
+  font-size: small;
+}
+
+#tbBillRef {
+  font-size: small;
+}
+
 
 </style>
 </head>
@@ -40,15 +70,15 @@ img {
 
 <table id='tbOne'>
   <tr>
-    <th id='tbOnePointOneWithGrey'>BILLING INFORMATIONS</th>
+    <th id='tbOnePointOneGreyHeader'>BILLING INFORMATIONS</th>
     <th></th>
   </tr>
   
   <tr>
-    <td id='tbOnePointOne'>
+    <td>
       <table>
           <tr>
-            <td>Statement Date:</td>
+            <td >Statement Date:</td>
             <td>{{statementDate}}</td>
           </tr>
           <tr>
@@ -68,18 +98,18 @@ img {
           <td>&nbsp</td>
         </tr>
         <tr>
-          <td>{{clientName}}</td>
+          <td id='tdRight'>{{clientName}}</td>
         </tr>
         <tr>
-          <td>{{clientAddress}}</td>
+          <td id='tdRight'>{{clientAddress}}</td>
         </tr>
       </table>
     </td>
-    
   </tr>
 </table>
 
 <br/>
+
 <table id='tbTwo'>
   <tr>
     <th>PLAN</th>
@@ -89,10 +119,10 @@ img {
   </tr>
   
   <tr>
-    <td>{{plan}}</td>
-    <td>{{type}}</td>
+    <td id='tdCenter'>{{planName}}</td>
+    <td id='tdCenter'>{{type}}</td>
     <td>{{descriptions}}</td>
-    <td>{{subTotal}}</td>
+    <td id='tdCenter'>{{subTotal}}</td>
     
   </tr>
 </table>
@@ -107,7 +137,7 @@ img {
   
   <tr>
     <td>
-      <table id='tbThreePointOne'>
+      <table id='tbPytOpt'>
           <tr>
             <td>Payment Option:</td>
             <td>{{paymentOption}}</td>
@@ -116,7 +146,7 @@ img {
     </td>
     
     <td>
-      <table id='tbThreePointTwo'>
+      <table id='tbBillRef'>
         <tr>
           <th>&nbsp</th>
           <th>&nbsp</th>

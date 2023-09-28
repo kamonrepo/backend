@@ -305,6 +305,7 @@ export const updatePayment = async (req, res) => {
                                                                     billingReferenceNo: 'todo',
                                                                     type: serviceCateg.category,
                                                                     descriptions: 'N/A',
+                                                                    paymentOption: firstTimeAccumulatedPayment.mode,
                                                                     subTotal: subTotal,
                                                                     totalAmtToPay: computeTATP
                                                                 }
