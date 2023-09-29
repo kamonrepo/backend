@@ -484,3 +484,129 @@ Emitted 'error' event on Server instance at:
   address: '0.0.0.0',
   port: 4444
 }
+node:events:491
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use :::4444
+    at Server.setupListenHandle [as _listen2] (node:net:1463:16)
+    at listenInCluster (node:net:1511:12)
+    at Server.listen (node:net:1599:7)
+    at file:///C:/etc/newnew/backend/index.js:44:22
+    at tryCatcher (C:\etc\newnew\backend\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:512:31)
+    at Promise._settlePromise (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:569:18)
+    at Promise._settlePromise0 (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:614:10)
+    at Promise._settlePromises (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:693:18)
+    at Async._drainQueue (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:133:16)
+    at Async._drainQueues (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:143:10)
+    at Immediate.Async.drainQueues (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate (node:internal/timers:466:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1490:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 4444
+}
+[1m[43m[30m
+  Puppeteer old Headless deprecation warning:[0m[33m
+    In the near future `headless: true` will default to the new Headless mode
+    for Chrome instead of the old Headless implementation. For more
+    information, please see https://developer.chrome.com/articles/new-headless/.
+    Consider opting in early by passing `headless: "new"` to `puppeteer.launch()`
+    If you encounter any bugs, please report them to https://github.com/puppeteer/puppeteer/issues/new/choose.[0m
+
+Error convertHtmlToJpegAndSaveToFsysFolder Error: Could not find Chrome (ver. 116.0.5845.96). This can occur if either
+ 1. you did not perform an installation before running the script (e.g. `npm install`) or
+ 2. your cache path is incorrectly configured (which is: C:\Windows\system32\config\systemprofile\.cache\puppeteer).
+For (2), check out our guide on configuring puppeteer at https://pptr.dev/guides/configuration.
+    at ChromeLauncher.resolveExecutablePath (file:///C:/etc/newnew/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/ProductLauncher.js:274:27)
+    at ChromeLauncher.executablePath (file:///C:/etc/newnew/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/ChromeLauncher.js:186:25)
+    at ChromeLauncher.computeLaunchArguments (file:///C:/etc/newnew/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/ChromeLauncher.js:92:37)
+    at async ChromeLauncher.launch (file:///C:/etc/newnew/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/ProductLauncher.js:53:28)
+    at async convertHtmlToJpegAndSaveToFsysFolder (file:///C:/etc/newnew/backend/controllers/report/templates/index.js:52:25)
+    at async file:///C:/etc/newnew/backend/controllers/report/templates/index.js:34:27
+node:events:491
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EACCES: permission denied 0.0.0.0:4444
+    at Server.setupListenHandle [as _listen2] (node:net:1446:21)
+    at listenInCluster (node:net:1511:12)
+    at Server.listen (node:net:1599:7)
+    at file:///C:/etc/newnew/backend/index.js:44:22
+    at tryCatcher (C:\etc\newnew\backend\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:512:31)
+    at Promise._settlePromise (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:569:18)
+    at Promise._settlePromise0 (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:614:10)
+    at Promise._settlePromises (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:693:18)
+    at Async._drainQueue (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:133:16)
+    at Async._drainQueues (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:143:10)
+    at Immediate.Async.drainQueues (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate (node:internal/timers:466:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1490:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EACCES',
+  errno: -4092,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 4444
+}
+node:events:491
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EACCES: permission denied 0.0.0.0:4444
+    at Server.setupListenHandle [as _listen2] (node:net:1446:21)
+    at listenInCluster (node:net:1511:12)
+    at Server.listen (node:net:1599:7)
+    at file:///C:/etc/newnew/backend/index.js:44:22
+    at tryCatcher (C:\etc\newnew\backend\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:512:31)
+    at Promise._settlePromise (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:569:18)
+    at Promise._settlePromise0 (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:614:10)
+    at Promise._settlePromises (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:693:18)
+    at Async._drainQueue (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:133:16)
+    at Async._drainQueues (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:143:10)
+    at Immediate.Async.drainQueues (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate (node:internal/timers:466:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1490:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EACCES',
+  errno: -4092,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 4444
+}
+node:events:491
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EACCES: permission denied 0.0.0.0:4444
+    at Server.setupListenHandle [as _listen2] (node:net:1446:21)
+    at listenInCluster (node:net:1511:12)
+    at Server.listen (node:net:1599:7)
+    at file:///C:/etc/newnew/backend/index.js:44:22
+    at tryCatcher (C:\etc\newnew\backend\node_modules\bluebird\js\release\util.js:16:23)
+    at Promise._settlePromiseFromHandler (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:512:31)
+    at Promise._settlePromise (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:569:18)
+    at Promise._settlePromise0 (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:614:10)
+    at Promise._settlePromises (C:\etc\newnew\backend\node_modules\bluebird\js\release\promise.js:693:18)
+    at Async._drainQueue (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:133:16)
+    at Async._drainQueues (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:143:10)
+    at Immediate.Async.drainQueues (C:\etc\newnew\backend\node_modules\bluebird\js\release\async.js:17:14)
+    at processImmediate (node:internal/timers:466:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1490:8)
+    at processTicksAndRejections (node:internal/process/task_queues:83:21) {
+  code: 'EACCES',
+  errno: -4092,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 4444
+}

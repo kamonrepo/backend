@@ -10,3 +10,101 @@
 2023-09-27 17:56:47 - Started 6052
 2023-09-28 07:07:54 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2023-09-28 07:07:54 - Started 6648
+2023-09-28 15:00:36 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2023-09-28 15:00:36 - Started 5864
+2023-09-28 15:10:09 - Stopping nodebasicserver.exe
+2023-09-28 15:10:09 - ProcessKill 5864
+2023-09-28 15:10:09 - Shutdown exception
+Message:A system shutdown is in progress.
+
+Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInternal(Int32 errorCode, IntPtr errorInfo)
+   at System.Management.ManagementScope.InitializeGuts(Object o)
+   at System.Management.ManagementScope.Initialize()
+   at System.Management.ManagementObjectSearcher.Initialize()
+   at System.Management.ManagementObjectSearcher.Get()
+   at winsw.WrapperService.GetChildPids(Int32 pid)
+   at winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   at winsw.WrapperService.StopIt()
+   at winsw.WrapperService.OnShutdown()
+2023-09-28 15:10:48 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2023-09-28 15:10:48 - Started 6044
+2023-09-28 15:11:47 - Stopping nodebasicserver.exe
+2023-09-28 15:11:47 - ProcessKill 6044
+2023-09-28 15:11:47 - Found child process: 6064 Name: conhost.exe
+2023-09-28 15:11:47 - Found child process: 6720 Name: node.exe
+2023-09-28 15:11:47 - Stopping process 6064
+2023-09-28 15:11:47 - Send SIGINT 6064
+2023-09-28 15:11:47 - SIGINT to 6064 failed - Killing as fallback
+2023-09-28 15:11:47 - Stopping process 6720
+2023-09-28 15:11:47 - Send SIGINT 6720
+2023-09-28 15:11:47 - SIGINT to 6720 failed - Killing as fallback
+2023-09-28 15:11:47 - Stopping process 6044
+2023-09-28 15:11:47 - Send SIGINT 6044
+2023-09-28 15:11:47 - SIGINT to 6044 failed - Killing as fallback
+2023-09-28 15:11:47 - Finished nodebasicserver.exe
+2023-09-28 15:11:54 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2023-09-28 15:11:54 - Started 1128
+2023-09-28 15:19:02 - Stopping nodebasicserver.exe
+2023-09-28 15:19:02 - ProcessKill 1128
+2023-09-28 15:19:02 - Found child process: 1332 Name: conhost.exe
+2023-09-28 15:19:02 - Found child process: 1944 Name: node.exe
+2023-09-28 15:19:02 - Stopping process 1332
+2023-09-28 15:19:02 - Send SIGINT 1332
+2023-09-28 15:19:02 - SIGINT to 1332 failed - Killing as fallback
+2023-09-28 15:19:02 - Stopping process 1944
+2023-09-28 15:19:02 - Send SIGINT 1944
+2023-09-28 15:19:02 - SIGINT to 1944 failed - Killing as fallback
+2023-09-28 15:19:02 - Stopping process 1128
+2023-09-28 15:19:02 - Send SIGINT 1128
+2023-09-28 15:19:02 - SIGINT to 1128 failed - Killing as fallback
+2023-09-28 15:19:02 - Finished nodebasicserver.exe
+2023-09-28 16:06:48 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2023-09-28 16:06:48 - Started 268
+2023-09-28 16:07:00 - Stopping nodebasicserver.exe
+2023-09-28 16:07:00 - ProcessKill 268
+2023-09-28 16:07:01 - Found child process: 15252 Name: conhost.exe
+2023-09-28 16:07:01 - Found child process: 12308 Name: node.exe
+2023-09-28 16:07:01 - Stopping process 15252
+2023-09-28 16:07:01 - Send SIGINT 15252
+2023-09-28 16:07:01 - SIGINT to 15252 failed - Killing as fallback
+2023-09-28 16:07:01 - Stopping process 12308
+2023-09-28 16:07:01 - Send SIGINT 12308
+2023-09-28 16:07:01 - SIGINT to 12308 failed - Killing as fallback
+2023-09-28 16:07:01 - Stopping process 268
+2023-09-28 16:07:01 - Send SIGINT 268
+2023-09-28 16:07:01 - SIGINT to 268 failed - Killing as fallback
+2023-09-28 16:07:01 - Finished nodebasicserver.exe
+2023-09-28 16:07:04 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2023-09-28 16:07:04 - Started 13776
+2023-09-28 16:24:13 - Stopping nodebasicserver.exe
+2023-09-28 16:24:13 - ProcessKill 13776
+2023-09-28 16:24:13 - Found child process: 12464 Name: conhost.exe
+2023-09-28 16:24:13 - Found child process: 16208 Name: node.exe
+2023-09-28 16:24:14 - Stopping process 12464
+2023-09-28 16:24:14 - Send SIGINT 12464
+2023-09-28 16:24:14 - SIGINT to 12464 failed - Killing as fallback
+2023-09-28 16:24:14 - Stopping process 16208
+2023-09-28 16:24:14 - Send SIGINT 16208
+2023-09-28 16:24:14 - SIGINT to 16208 failed - Killing as fallback
+2023-09-28 16:24:14 - Stopping process 13776
+2023-09-28 16:24:14 - Send SIGINT 13776
+2023-09-28 16:24:14 - SIGINT to 13776 failed - Killing as fallback
+2023-09-28 16:24:14 - Finished nodebasicserver.exe
+2023-09-28 16:34:48 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2023-09-28 16:34:48 - Started 6092
+2023-09-29 09:21:01 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2023-09-29 09:21:01 - Started 6056
+2023-09-29 15:56:09 - Stopping nodebasicserver.exe
+2023-09-29 15:56:09 - ProcessKill 6056
+2023-09-29 15:56:10 - Found child process: 6084 Name: conhost.exe
+2023-09-29 15:56:10 - Found child process: 6852 Name: node.exe
+2023-09-29 15:56:10 - Stopping process 6084
+2023-09-29 15:56:10 - Send SIGINT 6084
+2023-09-29 15:56:10 - SIGINT to 6084 failed - Killing as fallback
+2023-09-29 15:56:10 - Stopping process 6852
+2023-09-29 15:56:10 - Send SIGINT 6852
+2023-09-29 15:56:10 - SIGINT to 6852 failed - Killing as fallback
+2023-09-29 15:56:10 - Stopping process 6056
+2023-09-29 15:56:10 - Send SIGINT 6056
+2023-09-29 15:56:10 - SIGINT to 6056 failed - Killing as fallback
+2023-09-29 15:56:10 - Finished nodebasicserver.exe

@@ -1,0 +1,151 @@
+Server Running on Port: http://localhost:4444
+Server Running on Port: http://localhost:4444
+Server Running on Port: http://localhost:4444
+computeFees started
+return account number:::  GST-09282023151527-5-454
+newBillRunCandidate has been save:  {
+  createdAt: 2023-09-28T07:11:57.957Z,
+  _id: 6515280ff1e5f50798ce45fb,
+  host: 6514c96c69ddda3c985403b3,
+  client: 6515280ff1e5f50798ce45f8,
+  name: 'truth',
+  plan: 65010f9e7aeb1b200c9f8ee3,
+  planName: 'Starlink',
+  monthlyFee: '3333',
+  dueDate: '15th',
+  monthPeriod: '09/01/2023',
+  status: 'NOTPAID',
+  __v: 0
+}
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  3
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  3
+ctrl-getPost-init
+ctrl-getPost undefined
+ctrl-getPostsBySearch-init
+ctrl-getPostsBySearch:  0
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  3
+todo::::  6514c96c69ddda3c985403b3
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  3
+PARENT-TRY-CATCH-ERROR:  CastError: Cast to ObjectId failed for value "" (type string) at path "billrun" for model "payments"
+    at model.Query.exec (C:\etc\newnew\backend\node_modules\mongoose\lib\query.js:4498:21)
+    at model.Query.Query.then (C:\etc\newnew\backend\node_modules\mongoose\lib\query.js:4592:15)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5) {
+  messageFormat: undefined,
+  stringValue: '""',
+  kind: 'ObjectId',
+  value: '',
+  path: 'billrun',
+  reason: Error: Argument passed in must be a single String of 12 bytes or a string of 24 hex characters
+      at new ObjectID (C:\etc\newnew\backend\node_modules\bson\lib\bson\objectid.js:59:11)
+      at castObjectId (C:\etc\newnew\backend\node_modules\mongoose\lib\cast\objectid.js:25:12)
+      at ObjectId.cast (C:\etc\newnew\backend\node_modules\mongoose\lib\schema\objectid.js:246:12)
+      at ObjectId.SchemaType.applySetters (C:\etc\newnew\backend\node_modules\mongoose\lib\schematype.js:1123:12)
+      at ObjectId.SchemaType._castForQuery (C:\etc\newnew\backend\node_modules\mongoose\lib\schematype.js:1601:15)
+      at ObjectId.SchemaType.castForQuery (C:\etc\newnew\backend\node_modules\mongoose\lib\schematype.js:1591:15)
+      at ObjectId.SchemaType.castForQueryWrapper (C:\etc\newnew\backend\node_modules\mongoose\lib\schematype.js:1568:20)
+      at cast (C:\etc\newnew\backend\node_modules\mongoose\lib\cast.js:332:32)
+      at model.Query.Query.cast (C:\etc\newnew\backend\node_modules\mongoose\lib\query.js:4937:12)
+      at model.Query.Query._castConditions (C:\etc\newnew\backend\node_modules\mongoose\lib\query.js:1975:10)
+      at model.Query.<anonymous> (C:\etc\newnew\backend\node_modules\mongoose\lib\query.js:2002:8)
+      at model.Query._wrappedThunk [as _find] (C:\etc\newnew\backend\node_modules\mongoose\lib\helpers\query\wrapThunk.js:16:8)
+      at C:\etc\newnew\backend\node_modules\kareem\index.js:370:33
+      at processTicksAndRejections (node:internal/process/task_queues:78:11),
+  valueType: 'string'
+}
+Server Running on Port: http://localhost:4444
+Server Running on Port: http://localhost:4444
+computeFees started
+computeFees started
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  4
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  4
+computeFees started
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  4
+todo::::  6514c96c69ddda3c985403b3
+return account number:::  GST-09282023160817-3-232
+newBillRunCandidate has been save:  {
+  createdAt: 2023-09-28T08:07:07.463Z,
+  _id: 651534715d93fc3f50c3555a,
+  host: 6514c96c69ddda3c985403b3,
+  client: 651534715d93fc3f50c35557,
+  name: 'Porangui',
+  plan: 65010f9e7aeb1b200c9f8ee3,
+  planName: 'Starlink',
+  monthlyFee: '3333',
+  dueDate: '15th',
+  monthPeriod: '09/01/2023',
+  status: 'NOTPAID',
+  __v: 0
+}
+todo::::  6514c96c69ddda3c985403b3
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  4
+todo::::  6514c96c69ddda3c985403b3
+BillRunCandidate update done
+BillRunCandidate save done
+generateDoc-req:  {
+  clientName: 'Porangui',
+  clientAddress: 'Porangui Address',
+  contactNumber: '09458977681',
+  accountNumber: 'GST-09282023160817-3-232',
+  accountStatus: 'Active',
+  planName: 'Starlink',
+  statementDate: '09/28/2023',
+  billingReferenceNo: 'todo',
+  type: 'Internet',
+  descriptions: 'N/A',
+  paymentOption: 'MANUAL',
+  subTotal: 3333,
+  totalAmtToPay: 3333
+}
+ERR:  Error: Could not find Chrome (ver. 116.0.5845.96). This can occur if either
+ 1. you did not perform an installation before running the script (e.g. `npm install`) or
+ 2. your cache path is incorrectly configured (which is: C:\Windows\system32\config\systemprofile\.cache\puppeteer).
+For (2), check out our guide on configuring puppeteer at https://pptr.dev/guides/configuration.
+    at ChromeLauncher.resolveExecutablePath (file:///C:/etc/newnew/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/ProductLauncher.js:274:27)
+    at ChromeLauncher.executablePath (file:///C:/etc/newnew/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/ChromeLauncher.js:186:25)
+    at ChromeLauncher.computeLaunchArguments (file:///C:/etc/newnew/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/ChromeLauncher.js:92:37)
+    at async ChromeLauncher.launch (file:///C:/etc/newnew/backend/node_modules/puppeteer-core/lib/esm/puppeteer/node/ProductLauncher.js:53:28)
+    at async convertHtmlToJpegAndSaveToFsysFolder (file:///C:/etc/newnew/backend/controllers/report/templates/index.js:52:25)
+    at async file:///C:/etc/newnew/backend/controllers/report/templates/index.js:34:27
+PostMessage create done  651534915d93fc3f50c35576
+SOA create success!
+todo::::  6514c96c69ddda3c985403b3
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  5
+ctrl-getPost-init
+ctrl-getPost undefined
+ctrl-getPostsBySearch-init
+ctrl-getPostsBySearch:  0
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  5
+ctrl-getPost-init
+ctrl-getPostsBySearch-init
+ctrl-getPost undefined
+ctrl-getPostsBySearch:  0
+ctrl-getPostsBySearch-init
+ctrl-getPostsBySearch:  0
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  5
+ctrl-getPostsBySearch-init
+ctrl-getPostsBySearch:  0
+ctrl-getPost-init
+ctrl-getPost undefined
+ctrl-getPostsBySearch-init
+ctrl-getPostsBySearch:  0
+computeFees started
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  5
+computeFees started
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  5
+computeFees started
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  5
+Server Running on Port: http://localhost:4444

@@ -1,5 +1,5 @@
 import fs from 'fs';
-import pdf from 'html-pdf';
+// import pdf from 'html-pdf';
 import Mustache from 'mustache';
 import puppeteer from 'puppeteer';
 import path from 'path'
