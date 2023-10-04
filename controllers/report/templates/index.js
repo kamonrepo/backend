@@ -91,9 +91,30 @@ async function convertHtmlToBase64(htmlContent) {
     }
 }
 
+function createPDF(html, options){
+	return new Promise((res, rej) => {
+        try {
+            pdf.create(html, options).toBuffer(function(err, buffer){
+                if (err){
+                    console.log('svc-generator : Document creation failed');
+                    console.log("ERROR: " + err);
+                    rej(err);
+                } else {
+                    var base64Encoded = buffer.toString('base64');
+                    console.log('svc-generator : Document creation successful');
+                    res(base64Encoded);
+                }
+            });
+        } catch (e) {
+            console.log(e);
+            rej(e);
+        }
+    })   
+}
+
+
 // async function convertHtmlToBase64(htmlContent) {
 //     try {
-
 //         const dom = new JSDOM(htmlContent);
 //         const canvas = await html2canvas(dom.window.document.body);
 //         const base64Image = canvas.toDataURL('image/jpeg');
@@ -104,7 +125,6 @@ async function convertHtmlToBase64(htmlContent) {
 //         throw error;
 //     }
 // }
-
 // async function convertHtmlToBase64(htmlContent) {
 //     try {
 //       const canvas = await html2canvas(htmlContent);
@@ -116,25 +136,5 @@ async function convertHtmlToBase64(htmlContent) {
 //     }
 // }
 
-// function createPDF(html, options){
-// 	return new Promise((res, rej) => {
-//         try {
-//             pdf.create(html, options).toBuffer(function(err, buffer){
-//                 if (err){
-//                     console.log('svc-generator : Document creation failed');
-//                     console.log("ERROR: " + err);
-//                     rej(err);
-//                 } else {
-//                     var base64Encoded = buffer.toString('base64');
-//                     console.log('svc-generator : Document creation successful');
-//                     res(base64Encoded);
-//                 }
-//             });
-//         } catch (e) {
-//             console.log(e);
-//             rej(e);
-//         }
-//     })   
-// }
 
 export default execute;

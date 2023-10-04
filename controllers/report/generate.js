@@ -1,4 +1,7 @@
+import express from 'express';
 import template from '../report/templates/index.js';
+
+const router = express.Router();
 
 const generateDoc = async (reqBody, res) => {
     try {
@@ -24,4 +27,118 @@ export const generate = async (req, res) => {
     }
 };
 
-// export default generate;
+export const getDataLocation = async (req, res) => { 
+    try {
+
+        console.log('getDataLocation started');
+        const paidAggregation = await BillRunCandidate.aggregate([
+            {
+              $match: {
+                $and: [
+                  {
+                    status: "PAID",
+                  },
+                  {
+                    $expr: {
+                      $lte: [
+                        {
+                          $toDate: "$monthPeriod",
+                        },
+                        {
+                          $dateFromParts: {
+                            year: {
+                              $year: new Date(),
+                            },
+                            month: {
+                              $month: new Date(),
+                            },
+                            day: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $group: {
+                _id: "$host",
+                totalPaidSum: {
+                  $sum: {
+                    $toDouble: "$monthlyFee",
+                  },
+                },
+              },
+            },
+        ]);
+
+        // Calculate total sum of monthlyFee WHERE status="NOTPAID" and group by host
+        const notPaidAggregation = await BillRunCandidate.aggregate([
+            {
+              $match: {
+                $and: [
+                  {
+                    status: "NOTPAID",
+                  },
+                  {
+                    $expr: {
+                      $lte: [
+                        {
+                          $toDate: "$monthPeriod",
+                        },
+                        {
+                          $dateFromParts: {
+                            year: {
+                              $year: new Date(),
+                            },
+                            month: {
+                              $month: new Date(),
+                            },
+                            day: 1,
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $group: {
+                _id: "$host",
+                totalNotPaidSum: {
+                  $sum: {
+                    $toDouble: "$monthlyFee",
+                  },
+                },
+              },
+            },
+        ]);
+  
+        // Get bill run names
+        const billRunNames = await BillRun.aggregate([
+           {
+              $project: {
+                 _id: 0,
+                 host: "$_id",
+                 billRun: 1
+              }
+           }
+        ]);
+  
+        // Combine the results into a single object
+        const result = billRunNames.map(item => ({
+           host: item.host,
+           billRun: item.billRun,
+           totalPaidSum: (paidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalPaidSum: 0 }).totalPaidSum,
+           totalNotPaidSum: (notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalNotPaidSum: 0 }).totalNotPaidSum
+        }));
+  
+        res.status(200).json(result);
+     } catch (error) {
+        res.status(500).json({ message: error.message });
+     }
+}
+
+export default router;
