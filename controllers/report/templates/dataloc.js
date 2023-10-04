@@ -1,5 +1,6 @@
 import fs from 'fs';
 import Mustache from 'mustache';
+import pdf from 'html-pdf';
 
 export const execute = async (req, res) => {
 
