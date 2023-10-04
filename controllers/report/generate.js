@@ -1,5 +1,8 @@
 import express from 'express';
 import template from '../report/templates/index.js';
+import dataLocTemplate from '../report/templates/dataloc.js';
+import BillRunCandidate from '../../models/billruncandidate.js';
+import BillRun from '../../models/billrun.js';
 
 const router = express.Router();
 
@@ -26,6 +29,18 @@ export const generate = async (req, res) => {
        return { message: error.message };
     }
 };
+
+const generateDataLoc = async (reqBody, res) => {
+    try {
+
+        let base64 = await dataLocTemplate(reqBody);
+        return base64; 
+    }
+    catch(e) {
+        return e;
+    }
+
+}
 
 export const getDataLocation = async (req, res) => { 
     try {
@@ -134,8 +149,11 @@ export const getDataLocation = async (req, res) => {
            totalPaidSum: (paidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalPaidSum: 0 }).totalPaidSum,
            totalNotPaidSum: (notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalNotPaidSum: 0 }).totalNotPaidSum
         }));
-  
-        res.status(200).json(result);
+       
+        console.log('generateDataLoc-req: ', );
+        let base64 = await generateDataLoc(req.body)
+
+        res.status(200).json(base64);
      } catch (error) {
         res.status(500).json({ message: error.message });
      }
