@@ -21,7 +21,7 @@ async function generate(req){
         
         try{
 
-            let reportParam = req;
+            let reportParam = req.mainData;
 
             const defaultTemplate = "C:/etc/newnew/backend/controllers/report/templates/dataloc-report.html";
 
@@ -38,10 +38,10 @@ async function generate(req){
             };
 
             let preHtml = fs.readFileSync(defaultTemplate, 'utf8');
-            
+            console.log('todododo html table::: ', req.rptParam);
             let html = Mustache.render(preHtml, reportParam);
 
-             let base64 = await createPDF(html, options);
+            let base64 = await createPDF(html, options);
 
             resolve(base64);
         }

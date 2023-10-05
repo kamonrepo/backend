@@ -30,10 +30,10 @@ export const generate = async (req, res) => {
     }
 };
 
-const generateDataLoc = async (reqBody, res) => {
+const generateDataLoc = async (payload, res) => {
     try {
 
-        let base64 = await dataLocTemplate(reqBody);
+        let base64 = await dataLocTemplate(payload);
         return base64; 
     }
     catch(e) {
@@ -150,8 +150,8 @@ export const getDataLocation = async (req, res) => {
            totalNotPaidSum: (notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalNotPaidSum: 0 }).totalNotPaidSum
         }));
        
-        console.log('generateDataLoc-req: ', );
-        let base64 = await generateDataLoc(req.body)
+
+        let base64 = await generateDataLoc({mainData: req.body, rptParam: result})
 
         res.status(200).json(base64);
      } catch (error) {
