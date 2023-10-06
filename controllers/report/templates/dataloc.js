@@ -38,7 +38,7 @@ async function generate(req){
             };
 
             let preHtml = fs.readFileSync(defaultTemplate, 'utf8');
-            console.log('todododo html table::: ', req.rptParam);
+            //console.log('todododo html table::: ', req.rptParam);
             let html = Mustache.render(preHtml, reportParam);
 
             let base64 = await createPDF(html, options);
