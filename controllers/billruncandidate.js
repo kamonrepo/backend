@@ -58,6 +58,7 @@ export const computeFees = async (req, res) => {
                     $toDouble: "$monthlyFee",
                   },
                 },
+                totalPaidClients: { $sum: 1 }
               },
             },
         ]);
@@ -101,6 +102,7 @@ export const computeFees = async (req, res) => {
                     $toDouble: "$monthlyFee",
                   },
                 },
+                totalUnpaidClients: { $sum: 1 }
               },
             },
         ]);
@@ -121,7 +123,9 @@ export const computeFees = async (req, res) => {
            host: item.host,
            billRun: item.billRun,
            totalPaidSum: (paidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalPaidSum: 0 }).totalPaidSum,
-           totalNotPaidSum: (notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalNotPaidSum: 0 }).totalNotPaidSum
+           totalNotPaidSum: (notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalNotPaidSum: 0 }).totalNotPaidSum,
+           totalPaidClients: (paidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalPaidClients: 0 }).totalPaidClients,
+           totalUnpaidClients: (notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalUnpaidClients: 0 }).totalUnpaidClients,
         }));
   
         res.status(200).json(result);

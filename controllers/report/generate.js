@@ -146,28 +146,17 @@ export const getDataLocation = async (req, res) => {
            }
         ]);
 
-
-         let holdPaidAggregation = paidAggregation;
-
         // Combine the results into a single object
         const result = billRunNames.map((item, index) => ({
            host: item.host,
            billRun: item.billRun,
            totalPaidSum: (paidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalPaidSum: 0 }).totalPaidSum,
            totalNotPaidSum: (notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalNotPaidSum: 0 }).totalNotPaidSum,
-
+           totalPaidClients: (paidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalPaidClients: 0 }).totalPaidClients,
+           totalUnpaidClients: (notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalUnpaidClients: 0 }).totalUnpaidClients,
         }));
 
-        console.log('DOES this result::: ', result);
-        console.log('--include::: ', holdPaidAggregation);
-
-        let updatedPayload = {};
-
-        Object.keys(result).forEach((index) => {
-          //console.log('result.objectKeys::: ', result[index]);
-        });
-
-        //console.log('updatedPayload-bottom::: ', updatedPayload);
+        console.log('---result::: ', result);
 
         let base64 = await generateDataLoc({mainData: req.body, rptParam: result})
 
