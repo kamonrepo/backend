@@ -27,12 +27,13 @@ async function generate(req){
             const defaultTemplate = "C:/etc/newnew/backend/controllers/report/templates/index-report.html";
 
             let preHtml = fs.readFileSync(defaultTemplate, 'utf8');
-            
+
+            console.log('reportParamreportParamreportParamreportParamreportParam::: ', reportParam);
+
             let html = Mustache.render(preHtml, reportParam);
 
              let myJpeg = await convertHtmlToJpegAndSaveToFsysFolder(html, `C:/etc/newnew/backend/images/${req.accountNumber}.jpg`,`${req.accountNumber}.jpg`);
 
-             console.log('myJpeg-convertHtmlToJpeg-RESP::: ', myJpeg);
 
             resolve(myJpeg);
         }

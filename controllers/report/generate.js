@@ -3,7 +3,6 @@ import template from '../report/templates/index.js';
 import dataLocTemplate from '../report/templates/dataloc.js';
 import BillRunCandidate from '../../models/billruncandidate.js';
 import BillRun from '../../models/billrun.js';
-import Client from '../../models/client.js';
 
 const router = express.Router();
 
@@ -155,8 +154,6 @@ export const getDataLocation = async (req, res) => {
            totalPaidClients: (paidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalPaidClients: 0 }).totalPaidClients,
            totalUnpaidClients: (notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalUnpaidClients: 0 }).totalUnpaidClients,
         }));
-
-        console.log('---result::: ', result);
 
         let base64 = await generateDataLoc({mainData: req.body, rptParam: result})
 

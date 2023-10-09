@@ -140,3 +140,19 @@ Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInter
 2023-10-05 09:41:56 - Send SIGINT 5968
 2023-10-05 09:41:56 - SIGINT to 5968 failed - Killing as fallback
 2023-10-05 09:41:56 - Finished nodebasicserver.exe
+2023-10-09 08:19:42 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2023-10-09 08:19:43 - Started 5592
+2023-10-09 08:36:10 - Stopping nodebasicserver.exe
+2023-10-09 08:36:10 - ProcessKill 5592
+2023-10-09 08:36:10 - Found child process: 5900 Name: conhost.exe
+2023-10-09 08:36:10 - Found child process: 6320 Name: node.exe
+2023-10-09 08:36:10 - Stopping process 5900
+2023-10-09 08:36:10 - Send SIGINT 5900
+2023-10-09 08:36:10 - SIGINT to 5900 failed - Killing as fallback
+2023-10-09 08:36:10 - Stopping process 6320
+2023-10-09 08:36:10 - Send SIGINT 6320
+2023-10-09 08:36:10 - SIGINT to 6320 failed - Killing as fallback
+2023-10-09 08:36:10 - Stopping process 5592
+2023-10-09 08:36:10 - Send SIGINT 5592
+2023-10-09 08:36:10 - SIGINT to 5592 failed - Killing as fallback
+2023-10-09 08:36:10 - Finished nodebasicserver.exe

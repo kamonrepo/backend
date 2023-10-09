@@ -15,13 +15,18 @@ export const execute = async (req, res) => {
         }
 }
 
+function formatDateManila(date) {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Asia/Manila' };
+    return date.toLocaleDateString('en-US', options);
+}
+
 async function generate(req){
 
     return new Promise(async(resolve, reject) => { 
         
         try{
 
-            let reportParam = req.mainData;
+            let reportParam = req.rptParam;
 
             const defaultTemplate = "C:/etc/newnew/backend/controllers/report/templates/dataloc-report.html";
 
@@ -38,8 +43,8 @@ async function generate(req){
             };
 
             let preHtml = fs.readFileSync(defaultTemplate, 'utf8');
-            //console.log('todododo html table::: ', req.rptParam);
-            let html = Mustache.render(preHtml, reportParam);
+
+            let html = Mustache.render(preHtml, {reportParam});
 
             let base64 = await createPDF(html, options);
 
