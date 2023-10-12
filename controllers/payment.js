@@ -36,17 +36,6 @@ function determineMonthPeriod(currentDate) {
     }
 }
 
-// function addOneMonth(dateString) {
-//     const [year, month] = dateString.split("-");
-//     const originalDate = new Date(year, parseInt(month) - 1); // JS months are 0-based
-//     originalDate.setMonth(originalDate.getMonth() + 1);
-  
-//     const newYear = originalDate.getFullYear();
-//     const newMonth = (originalDate.getMonth() + 1).toString().padStart(2, "0");
-  
-//     return `${newYear}-${newMonth}`;
-// }
-
 function addOneMonth(dateString) {
     // Parse the input date string
     const parts = dateString.split('/');
@@ -258,7 +247,7 @@ export const updatePayment = async (req, res) => {
                                             try {
                                                 const brcs = await BillRunCandidate.findById(brcId);
                                                 if(brcs){
-                                                    let currentMonthPeriod = brcs.monthPeriod; // string: YYYY-MM 
+                                                    let currentMonthPeriod = brcs.monthPeriod; // string: Eg. 10-1-2023
                                                     let updatedMonthPeriod = addOneMonth(currentMonthPeriod);
             
                                                     let payload = {

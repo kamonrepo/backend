@@ -22,6 +22,28 @@ function getFirstDayOfMonth(date) {
    return formattedDate;
 }
 
+function addOneMonth(dateString) {
+    // Parse the input date string
+    const parts = dateString.split('/');
+    const month = parseInt(parts[0], 10) - 1; // Months are 0-indexed in JavaScript
+    const day = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+  
+    // Create a Date object and add one month
+    const date = new Date(year, month + 1, day);
+  
+    // Get the new month, day, and year
+    const newMonth = date.getMonth() + 1; // Adding 1 to convert back to 1-indexed month
+    const newDay = date.getDate();
+    const newYear = date.getFullYear();
+  
+    // Format the output string
+    const formattedDate = `${newMonth.toString().padStart(2, '0')}/${newDay.toString().padStart(2, '0')}/${newYear}`;
+  
+    return formattedDate;
+}
+
+
 function AccountNoUniqueTimeStamp(date) { // example: "09142023202404"
     
     // Get month, day, year, hours, minutes, and seconds
@@ -76,7 +98,7 @@ export const createClient  = async (req, res) => {
             planName: client.planName,
             monthlyFee: client.monthlyFee,
             dueDate: client.dueDate,
-            monthPeriod: getFirstDayOfMonth(new Date()),
+            monthPeriod: addOneMonth(getFirstDayOfMonth(new Date())),
             status: 'NOTPAID'
         });
         
