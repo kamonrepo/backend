@@ -178,9 +178,9 @@ export const getBRCByBRId = async (req, res) => {
 
    try {
 
-       console.log('todo:::: ', hostId); //todododododododododod
+       //console.log('todo:::: ', hostId); //todododododododododod check client if status active
        const brcs = await BillRunCandidate.find({ host: hostId });
-
+       console.log('brcs:::: ', brcs.length);
 
        res.status(200).json(brcs);
 
@@ -357,16 +357,15 @@ export const createBRC  = async (req, res) => {
         console.log('createBRCPostman-req-body::: ', req.body);
 
         let newBillRunCandidate = new BillRunCandidate({
-            host: '64fb2488400f153370f5cd77',
-            client: '64fb24a8400f153370f5cd86',
-            name: 'B1',
-            plan: '6469b244f8628326b81ff5e5',
-            planName: '100GB FIBR',
-            monthlyFee: '1',
-            dueDate: '15th',
-            monthPeriod: '06/01/2023',
-            paymentDate: new Date(),
-            status: 'PAID'
+            host: '651a7a82ae6a990e20c191b2',
+            client: '652646b23a2465212c008329',
+            name: 'Newnewnew',
+            plan: '65010f9e7aeb1b200c9f8ee3',
+            planName: 'Starlink',
+            monthlyFee: '3333',
+            dueDate: 'Endth',
+            monthPeriod: '09/01/2023',
+            status: 'NOTPAID'
         });
 
         await newBillRunCandidate.save();

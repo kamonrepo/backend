@@ -156,3 +156,35 @@ Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInter
 2023-10-09 08:36:10 - Send SIGINT 5592
 2023-10-09 08:36:10 - SIGINT to 5592 failed - Killing as fallback
 2023-10-09 08:36:10 - Finished nodebasicserver.exe
+2023-10-09 15:26:49 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2023-10-09 15:26:49 - Started 4972
+2023-10-10 15:44:29 - Stopping nodebasicserver.exe
+2023-10-10 15:44:29 - ProcessKill 4972
+2023-10-10 15:44:30 - Found child process: 5012 Name: conhost.exe
+2023-10-10 15:44:30 - Found child process: 5180 Name: node.exe
+2023-10-10 15:44:30 - Stopping process 5012
+2023-10-10 15:44:30 - Send SIGINT 5012
+2023-10-10 15:44:30 - SIGINT to 5012 failed - Killing as fallback
+2023-10-10 15:44:30 - Stopping process 5180
+2023-10-10 15:44:30 - Send SIGINT 5180
+2023-10-10 15:44:30 - SIGINT to 5180 failed - Killing as fallback
+2023-10-10 15:44:30 - Stopping process 4972
+2023-10-10 15:44:30 - Send SIGINT 4972
+2023-10-10 15:44:30 - SIGINT to 4972 failed - Killing as fallback
+2023-10-10 15:44:30 - Finished nodebasicserver.exe
+2023-10-10 16:04:52 - Starting C:\Program Files\nodejs\node.exe  --harmony C:\etc\newnew\backend\node_modules\node-windows\lib\wrapper.js --file C:\etc\newnew\backend\index.js --scriptoptions= --log "nodeBasicServer wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2023-10-10 16:04:52 - Started 6152
+2023-10-10 18:04:38 - Stopping nodebasicserver.exe
+2023-10-10 18:04:38 - ProcessKill 6152
+2023-10-10 18:04:38 - Found child process: 6164 Name: conhost.exe
+2023-10-10 18:04:38 - Found child process: 6804 Name: node.exe
+2023-10-10 18:04:38 - Stopping process 6164
+2023-10-10 18:04:38 - Send SIGINT 6164
+2023-10-10 18:04:38 - SIGINT to 6164 failed - Killing as fallback
+2023-10-10 18:04:38 - Stopping process 6804
+2023-10-10 18:04:38 - Send SIGINT 6804
+2023-10-10 18:04:38 - SIGINT to 6804 failed - Killing as fallback
+2023-10-10 18:04:38 - Stopping process 6152
+2023-10-10 18:04:38 - Send SIGINT 6152
+2023-10-10 18:04:38 - SIGINT to 6152 failed - Killing as fallback
+2023-10-10 18:04:38 - Finished nodebasicserver.exe

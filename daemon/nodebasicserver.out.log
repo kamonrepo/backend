@@ -167,3 +167,59 @@ createGroup-group-req:  { name: 'Laguna' }
 computeFees started
 Server Running on Port: http://localhost:4444
 Server Running on Port: http://localhost:4444
+Server Running on Port: http://localhost:4444
+computeFees started
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  8
+ctrl-getPost-init
+ctrl-getPost undefined
+ctrl-getPostsBySearch-init
+ctrl-getPostsBySearch:  0
+computeFees started
+getDataLocation started
+svc-generator : Document creation successful
+getDataLocation started
+svc-generator : Document creation successful
+Server Running on Port: http://localhost:4444
+computeFees started
+computeFees started
+todo::::  651a7a82ae6a990e20c191b2
+computeFees started
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  8
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  8
+ctrl-getPost-init
+ctrl-getPost undefined
+ctrl-getPostsBySearch-init
+ctrl-getPostsBySearch:  0
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  8
+ctrl-getPost-init
+ctrl-getPostsBySearch-init
+ctrl-getPost undefined
+ctrl-getPostsBySearch:  0
+ctrl-getPostsBySearch-init
+ctrl-getPostsBySearch:  0
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  8
+ctrl-getPostsBySearch-init
+ctrl-getPost-init
+ctrl-getPostsBySearch:  0
+ctrl-getPost undefined
+ctrl-getPostsBySearch-init
+ctrl-getPostsBySearch:  0
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  8
+computeFees started
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  8
+computeFees started
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  8
+computeFees started
+ctrl-getPosts-init-func()
+ctrl-getPosts-length:  8
+todo::::  651a7a82ae6a990e20c191b2
+todo::::  651f38d0d5ee261f3c2208a2
+todo::::  651a7a82ae6a990e20c191b2
