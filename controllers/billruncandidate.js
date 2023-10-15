@@ -4,18 +4,6 @@ import BillRun from '../models/billrun.js';
 
 const router = express.Router();
 
-function getCurrentMonthPeriod(date) {
-
-    let year = date.getFullYear();
-    let month = (date.getMonth() + 1).toString().padStart(2, '0');
-    
-    let formattedDate = `${year}-${month}`;
-
-    //resume sa line 22
-
-    return formattedDate;
-}
-
 export const computeFees = async (req, res) => { 
     try {
         console.log('computeFees started');

@@ -7,7 +7,7 @@ const billRunCandidateSchema = mongoose.Schema({
     plan: {  type: mongoose.Schema.Types.ObjectId, ref: 'plans'},
     planName: { type: String, required: true },
     name: { type: String, required: true },
-    monthlyFee: { type: String, required: true },
+    monthlyFee: { type: [String], default: [] },
     paymentDate: { type: String },
     dueDate: { type: String, required: true },
     monthPeriod: { type: String, required: true },
