@@ -249,6 +249,10 @@ export const updatePayment = async (req, res) => {
                                                 if(brcs){
                                                     let currentMonthPeriod = brcs.monthPeriod; // string: Eg. 10-1-2023
                                                     let updatedMonthPeriod = addOneMonth(currentMonthPeriod);
+
+                                                    let sharedValue = addOneMonth(getFirstDayOfMonth(new Date()));
+
+                                                    let mfData = { period: sharedValue, amount: brcs.monthlyFee }
             
                                                     let payload = {
                                                         host: brid,
@@ -256,7 +260,7 @@ export const updatePayment = async (req, res) => {
                                                         name: brcs.name,
                                                         plan: brcs.plan,
                                                         planName: brcs.planName,
-                                                        monthlyFee: brcs.monthlyFee,
+                                                        monthlyFee: [],
                                                         dueDate: brcs.dueDate,
                                                         monthPeriod: updatedMonthPeriod, 
                                                         paymentDate: formatDateManila(new Date()),
@@ -264,7 +268,8 @@ export const updatePayment = async (req, res) => {
                                                     }
             
                                                     let newBillRunCandidate = new BillRunCandidate(payload);
-            
+
+                                                    newBillRunCandidate.monthlyFee.push(mfData);
                                                     try {
             
                                                         newBillRunCandidate.save();

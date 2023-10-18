@@ -10,6 +10,126 @@ export const computeFees = async (req, res) => {
 
       const paidAggregation = await BillRunCandidate.aggregate([
           {
+              $match: {
+                  $and: [
+                      {
+                          status: "PAID",
+                      },
+                      {
+                          $expr: {
+                              $lte: [
+                                  {
+                                      $toDate: { $arrayElemAt: ["$monthlyFee.monthlyFee.period", 0] },
+                                  },
+                                  {
+                                      $dateFromParts: {
+                                          year: {
+                                              $year: new Date(),
+                                          },
+                                          month: {
+                                              $month: new Date(),
+                                          },
+                                          day: 1,
+                                      },
+                                  },
+                              ],
+                          },
+                      },
+                  ],
+              },
+          },
+          {
+              $group: {
+                  _id: "$host",
+                  totalPaidSum: {
+                      $sum: {
+                          $toDouble: { $arrayElemAt: ["$monthlyFee.monthlyFee.amount", 0] },
+                      },
+                  },
+                  totalPaidClients: { $sum: 1 }
+              },
+          },
+      ]);
+
+      const notPaidAggregation = await BillRunCandidate.aggregate([
+          {
+              $match: {
+                  $and: [
+                      {
+                          status: "NOTPAID",
+                      },
+                      {
+                          $expr: {
+                              $lte: [
+                                  {
+                                      $toDate: { $arrayElemAt: ["$monthlyFee.monthlyFee.period", 0] },
+                                  },
+                                  {
+                                      $dateFromParts: {
+                                          year: {
+                                              $year: new Date(),
+                                          },
+                                          month: {
+                                              $month: new Date(),
+                                          },
+                                          day: 1,
+                                      },
+                                  },
+                              ],
+                          },
+                      },
+                  ],
+              },
+          },
+          {
+              $group: {
+                  _id: "$host",
+                  totalNotPaidSum: {
+                      $sum: {
+                          $toDouble: { $arrayElemAt: ["$monthlyFee.monthlyFee.amount", 0] },
+                      },
+                  },
+                  totalUnpaidClients: { $sum: 1 }
+              },
+          },
+      ]);
+
+      const billRunNames = await BillRun.aggregate([
+          {
+              $project: {
+                  _id: 0,
+                  host: "$_id",
+                  billRun: 1
+              }
+          }
+      ]);
+
+      const result = billRunNames.map(item => {
+          const paidData = paidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalPaidSum: 0, totalPaidClients: 0 };
+          const notPaidData = notPaidAggregation.find(aggregation => aggregation._id.equals(item.host)) || { totalNotPaidSum: 0, totalUnpaidClients: 0 };
+
+          return {
+              host: item.host,
+              billRun: item.billRun,
+              totalPaidSum: paidData.totalPaidSum,
+              totalNotPaidSum: notPaidData.totalNotPaidSum,
+              totalPaidClients: paidData.totalPaidClients,
+              totalUnpaidClients: notPaidData.totalUnpaidClients,
+          };
+      });
+
+      res.status(200).json(result);
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
+}
+
+export const Array_computeFees = async (req, res) => { 
+  try {
+      console.log('computeFees started');
+
+      const paidAggregation = await BillRunCandidate.aggregate([
+          {
             $match: {
               $and: [
                 {
@@ -470,17 +590,17 @@ export const createBRC  = async (req, res) => {
     try {
         console.log('createBRCPostman-req-body::: ', req.body);
 
-        let mfData = { period: '10/01/2023', amount: '47000' }
+        let mfData = { period: '09/01/2023', amount: '3333' }
 
         let newBillRunCandidate = new BillRunCandidate({
             host: '652f1b7581473f2870f977f8',
-            client: '652f1eb281473f2870f9782d',
+            client: '652f485f619caa2f6c417f82',
             name: 'Damarv',
-            plan: '64ec802a2e48fc19608fd072',
-            planName: '50GB iPhone 33',
+            plan: '65010f9e7aeb1b200c9f8ee3',
+            planName: 'Starlink',
             monthlyFee: [],
             dueDate: '15th',
-            monthPeriod: '08/01/2023',
+            monthPeriod: '09/01/2023',
             status: 'NOTPAID'
         });
 
