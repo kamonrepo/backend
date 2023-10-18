@@ -89,6 +89,9 @@ export const createClient  = async (req, res) => {
 
         let fetchBr = await BillRun.find({ targetlocId: client.targetlocId });
         let bridHost = fetchBr[0]._id;
+        let sharedValue = addOneMonth(getFirstDayOfMonth(new Date()));
+
+        let mfData = { period: sharedValue, amount: client.monthlyFee }
 
         let newBillRunCandidate = new BillRunCandidate({
             host: bridHost,
@@ -96,11 +99,14 @@ export const createClient  = async (req, res) => {
             name: client.name,
             plan: client.plan,
             planName: client.planName,
-            monthlyFee: client.monthlyFee,
+            monthlyFee: [],
             dueDate: client.dueDate,
-            monthPeriod: addOneMonth(getFirstDayOfMonth(new Date())),
+            monthPeriod: sharedValue,
             status: 'NOTPAID'
         });
+
+        // Push mfData into monthlyFee array
+        newBillRunCandidate.monthlyFee.push(mfData);
         
         await newBillRunCandidate.save();
 

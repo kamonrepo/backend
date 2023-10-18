@@ -5,6 +5,132 @@ import BillRun from '../models/billrun.js';
 const router = express.Router();
 
 export const computeFees = async (req, res) => { 
+  try {
+      console.log('computeFees started');
+
+      const paidAggregation = await BillRunCandidate.aggregate([
+          {
+            $match: {
+              $and: [
+                {
+                  status: "PAID",
+                },
+                {
+                  $expr: {
+                    $lte: [
+                      {
+                        $toDate: "$monthPeriod",
+                      },
+                      {
+                        $dateFromParts: {
+                          year: {
+                            $year: new Date(),
+                          },
+                          month: {
+                            $month: new Date(),
+                          },
+                          day: 1,
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $unwind: "$monthlyFee" // Unwind the array
+          },
+          {
+            $group: {
+              _id: "$host",
+              totalPaidSum: {
+                $sum: {
+                  $toDouble: "$monthlyFee",
+                },
+              },
+              totalPaidClients: { $sum: 1 }
+            },
+          },
+      ]);
+
+      const notPaidAggregation = await BillRunCandidate.aggregate([
+          {
+            $match: {
+              $and: [
+                {
+                  status: "NOTPAID",
+                },
+                {
+                  $expr: {
+                    $lte: [
+                      {
+                        $toDate: "$monthPeriod",
+                      },
+                      {
+                        $dateFromParts: {
+                          year: {
+                            $year: new Date(),
+                          },
+                          month: {
+                            $month: new Date(),
+                          },
+                          day: 1,
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $unwind: "$monthlyFee" // Unwind the array
+          },
+          {
+            $group: {
+              _id: "$host",
+              totalNotPaidSum: {
+                $sum: {
+                  $toDouble: "$monthlyFee",
+                },
+              },
+              totalUnpaidClients: { $sum: 1 }
+            },
+          },
+      ]);
+
+      const billRunNames = await BillRun.aggregate([
+         {
+            $project: {
+               _id: 0,
+               host: "$_id",
+               billRun: 1
+            }
+         }
+      ]);
+
+      const result = billRunNames.map(item => {
+          const paidEntry = paidAggregation.find(aggregation => aggregation._id.equals(item.host));
+          const notPaidEntry = notPaidAggregation.find(aggregation => aggregation._id.equals(item.host));
+
+          return {
+              host: item.host,
+              billRun: item.billRun,
+              totalPaidSum: (paidEntry ? paidEntry.totalPaidSum : 0),
+              totalNotPaidSum: (notPaidEntry ? notPaidEntry.totalNotPaidSum : 0),
+              totalPaidClients: (paidEntry ? paidEntry.totalPaidClients : 0),
+              totalUnpaidClients: (notPaidEntry ? notPaidEntry.totalUnpaidClients : 0),
+          };
+      });
+
+      res.status(200).json(result);
+   } catch (error) {
+      res.status(500).json({ message: error.message });
+   }
+}
+
+export const mfNotArray_computeFees = async (req, res) => { 
     try {
         console.log('computeFees started');
 
@@ -344,17 +470,21 @@ export const createBRC  = async (req, res) => {
     try {
         console.log('createBRCPostman-req-body::: ', req.body);
 
+        let mfData = { period: '10/01/2023', amount: '47000' }
+
         let newBillRunCandidate = new BillRunCandidate({
-            host: '651a7a82ae6a990e20c191b2',
-            client: '652646b23a2465212c008329',
-            name: 'Newnewnew',
-            plan: '65010f9e7aeb1b200c9f8ee3',
-            planName: 'Starlink',
-            monthlyFee: '3333',
-            dueDate: 'Endth',
-            monthPeriod: '09/01/2023',
+            host: '652f1b7581473f2870f977f8',
+            client: '652f1eb281473f2870f9782d',
+            name: 'Damarv',
+            plan: '64ec802a2e48fc19608fd072',
+            planName: '50GB iPhone 33',
+            monthlyFee: [],
+            dueDate: '15th',
+            monthPeriod: '08/01/2023',
             status: 'NOTPAID'
         });
+
+        newBillRunCandidate.monthlyFee.push(mfData);
 
         await newBillRunCandidate.save();
         res.status(201).json(newBillRunCandidate);
