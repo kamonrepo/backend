@@ -28,12 +28,9 @@ async function generate(req){
 
             let preHtml = fs.readFileSync(defaultTemplate, 'utf8');
 
-            console.log('reportParamreportParamreportParamreportParamreportParam::: ', reportParam);
-
             let html = Mustache.render(preHtml, reportParam);
 
-             let myJpeg = await convertHtmlToJpegAndSaveToFsysFolder(html, `C:/etc/newnew/backend/images/${req.accountNumber}.jpg`,`${req.accountNumber}.jpg`);
-
+            let myJpeg = await convertHtmlToJpegAndSaveToFsysFolder(html, `C:/etc/newnew/backend/images/${req.accountNumber}.jpg`,`${req.accountNumber}.jpg`);
 
             resolve(myJpeg);
         }

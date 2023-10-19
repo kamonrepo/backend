@@ -9,7 +9,7 @@ const accuPaymentSchema = mongoose.Schema({
     period: { type: String },
     paymentDate: { type: String, required: true },
     mode: { type: String },
-    amount: { type: String },
+    monthlyFee: [],
     status: { type: String },
     createdAt: {
         type: Date,

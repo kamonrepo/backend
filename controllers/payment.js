@@ -159,7 +159,7 @@ export const updatePayment = async (req, res) => {
             let brid = req.body.selectedBr;
             //let clientName = req.body.selectedBr;
             let brcId = req.body.selectedIDs[0];
-            let totP = req.body.selectedMFs[0];
+            let mfAboutToPay = req.body.selectedMFs[0];
             let clientId = req.body.selectedBRCClient[0];
             let determinePeriod = determineMonthPeriod(new Date());
     
@@ -210,7 +210,7 @@ export const updatePayment = async (req, res) => {
                     executeStatusUpdate =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[0], { status: 'PAID', paymentDate: new Date() });
                       
                     if(executeStatusUpdate) {
-                        console.log('BillRunCandidate update done');
+                        console.log('BillRunCandidate update status to PAID done!');
     
                         let paymentPayload = { 
                             billrun: brid,
@@ -234,7 +234,7 @@ export const updatePayment = async (req, res) => {
                                     period: determinePeriod,
                                     paymentDate: new Date(),
                                     mode: modeOpt,
-                                    amount: totP,
+                                    amount: mfAboutToPay,
                                     status: 'PAID'
                                 }
             
@@ -250,7 +250,7 @@ export const updatePayment = async (req, res) => {
                                                     let currentMonthPeriod = brcs.monthPeriod; // string: Eg. 10-1-2023
                                                     let updatedMonthPeriod = addOneMonth(currentMonthPeriod);
 
-                                                    let sharedValue = addOneMonth(getFirstDayOfMonth(new Date()));
+                                                    //let sharedValue = addOneMonth(getFirstDayOfMonth(new Date()));
 
                                                     let mfData = { period: sharedValue, amount: brcs.monthlyFee }
             
@@ -260,7 +260,6 @@ export const updatePayment = async (req, res) => {
                                                         name: brcs.name,
                                                         plan: brcs.plan,
                                                         planName: brcs.planName,
-                                                        monthlyFee: [],
                                                         dueDate: brcs.dueDate,
                                                         monthPeriod: updatedMonthPeriod, 
                                                         paymentDate: formatDateManila(new Date()),
@@ -269,7 +268,11 @@ export const updatePayment = async (req, res) => {
             
                                                     let newBillRunCandidate = new BillRunCandidate(payload);
 
-                                                    newBillRunCandidate.monthlyFee.push(mfData);
+                                                    console.log('firstTimeAccumulatedPayment-PUSH-THIS-TO-MF::: ', brcs);
+                                                    
+                                                    console.log('---MF::: ', newBillRunCandidate);
+
+                                                    newBillRunCandidate.monthlyFee.push(brcs.monthlyFee);
                                                     try {
             
                                                         newBillRunCandidate.save();
