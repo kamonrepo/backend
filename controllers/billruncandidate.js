@@ -590,14 +590,14 @@ export const createBRC  = async (req, res) => {
     try {
         console.log('createBRCPostman-req-body::: ', req.body);
 
-        let mfData = { period: '09/01/2023', amount: '3333' }
+        let mfData = { period: '09/01/2023', amount: '47000' }
 
         let newBillRunCandidate = new BillRunCandidate({
-            host: '652f1b7581473f2870f977f8',
-            client: '652f485f619caa2f6c417f82',
-            name: 'Damarv',
-            plan: '65010f9e7aeb1b200c9f8ee3',
-            planName: 'Starlink',
+            host: '6530e2a147d23d3e0c51af73',
+            client: '65321cd5157f7a442422fdb0',
+            name: 'Another Me',
+            plan: '64ec802a2e48fc19608fd072',
+            planName: '50GB iPhone 33',
             monthlyFee: [],
             dueDate: '15th',
             monthPeriod: '09/01/2023',
