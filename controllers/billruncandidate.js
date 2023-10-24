@@ -414,7 +414,7 @@ export const getBRCByBRId = async (req, res) => {
 
        //console.log('todo:::: ', hostId); //todododododododododod check client if status active
        const brcs = await BillRunCandidate.find({ host: hostId });
-       console.log('brcs:::: ', brcs.length);
+       //console.log('brcs:::: ', brcs.length);
 
        res.status(200).json(brcs);
 
@@ -422,6 +422,28 @@ export const getBRCByBRId = async (req, res) => {
        res.status(404).json({ message: error.message });
    }
 }
+
+export const getBRCByMonthPeriod = async (req, res) => { 
+  console.log('getBRCByMonthPeriod-req:::: ', req);
+
+  //ObjectId.fromString( myObjectIdString );
+  
+  let returnMP = req.monthPeriod; //update this into req.hostID AND MP
+  let returnBRID = req.brid;
+
+  try {
+
+      //console.log('todo:::: ', hostId); //todododododododododod check client if status active
+      const brcs = await BillRunCandidate.find({ host: returnBRID, monthPeriod: returnMP });
+      console.log('getBRCByMonthPeriod:::: ', brcs.length);
+
+      res.status(200).json(brcs);
+
+  } catch (error) {
+      res.status(404).json({ message: error.message });
+  }
+}
+
 
 export const updateBRC = async (req, res) => {
 
