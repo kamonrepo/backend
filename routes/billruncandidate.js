@@ -6,7 +6,7 @@ const router = express.Router();
     router.get('/', getBillrunCandidate);
     router.get('/computeFees', computeFees);
     router.get('/:id', getBRCByBRId);
-    router.get('/monthPeriod', getBRCByMonthPeriod);
+    router.post('/monthPeriod', getBRCByMonthPeriod);
     router.patch('/updateBRC', updateBRC);
 
 export default router;

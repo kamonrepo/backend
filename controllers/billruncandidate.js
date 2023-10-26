@@ -424,20 +424,22 @@ export const getBRCByBRId = async (req, res) => {
 }
 
 export const getBRCByMonthPeriod = async (req, res) => { 
-  console.log('getBRCByMonthPeriod-req:::: ', req);
+  console.log('getBRCByMonthPeriod-req:::: ', req.body);
 
   //ObjectId.fromString( myObjectIdString );
   
-  let returnMP = req.monthPeriod; //update this into req.hostID AND MP
-  let returnBRID = req.brid;
+  let returnMP = req.body.monthPeriod; //update this into req.hostID AND MP
+  let returnBRID = req.body.host;
 
   try {
 
       //console.log('todo:::: ', hostId); //todododododododododod check client if status active
+      console.log('getBRCByMonthPeriod-rekk:::: ', { host: returnBRID, monthPeriod: returnMP });
       const brcs = await BillRunCandidate.find({ host: returnBRID, monthPeriod: returnMP });
       console.log('getBRCByMonthPeriod:::: ', brcs.length);
 
-      res.status(200).json(brcs);
+      // res.status(200).json(brcs);
+      res.json(brcs);
 
   } catch (error) {
       res.status(404).json({ message: error.message });
