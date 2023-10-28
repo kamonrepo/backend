@@ -1,8 +1,63 @@
 import express from 'express';
 import BillRunCandidate from '../models/billruncandidate.js';
 import BillRun from '../models/billrun.js';
+import mongoose from 'mongoose';
 
 const router = express.Router();
+
+function getFirstDayOfMonth(date) {
+  // Create a new Date object with the same year and month 
+  const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+  
+  const options = {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour12: false, // Use 24-hour format
+  timeZone: 'Asia/Manila',
+ };
+
+ const formattedDate = firstDayOfMonth.toLocaleString('en-US', options);
+  
+ return formattedDate;
+}
+
+export const checkLatestBRC = async (req, res) => { 
+  try {
+
+    let host = req.body.host;
+    let monthPeriod = getFirstDayOfMonth(new Date());
+
+    //todoo manila time zone dapat pag mag pe fetch if my relation/logic sa DATE
+    const countLatestBRC = await BillRunCandidate.aggregate([
+      { 
+        $match: { 
+          $and: [
+            {
+              host: mongoose.Types.ObjectId(host)
+            },
+            {
+              monthPeriod: monthPeriod 
+            }
+          ]
+        } 
+      },
+      { $group: {
+        _id: { host: '$host'},
+        totalBRC: {
+          $sum: 1
+        }
+      }}
+    ]);
+
+    console.log('checkLatestBRC-countLatestBRC-return::: ', countLatestBRC);
+    return res.status(200).json(countLatestBRC);
+
+  } catch (error) {
+    console.log('catch-errir-checkLatestBRC: ', error);
+    res.status(500).json({ message: error.message });
+  }
+}
 
 export const computeFees = async (req, res) => { 
   try {
@@ -413,8 +468,9 @@ export const getBRCByBRId = async (req, res) => {
    try {
 
        //console.log('todo:::: ', hostId); //todododododododododod check client if status active
+       console.log('getBRCByBRId-req-find-host-on-brc::: ', hostId);
        const brcs = await BillRunCandidate.find({ host: hostId });
-       //console.log('brcs:::: ', brcs.length);
+       console.log('getBRCByBRId-resp::: ', brcs.length);
 
        res.status(200).json(brcs);
 
@@ -424,19 +480,16 @@ export const getBRCByBRId = async (req, res) => {
 }
 
 export const getBRCByMonthPeriod = async (req, res) => { 
-  console.log('getBRCByMonthPeriod-req:::: ', req.body);
 
-  //ObjectId.fromString( myObjectIdString );
-  
-  let returnMP = req.body.monthPeriod; //update this into req.hostID AND MP
+  let returnMP = req.body.monthPeriod; 
   let returnBRID = req.body.host;
 
   try {
 
       //console.log('todo:::: ', hostId); //todododododododododod check client if status active
-      console.log('getBRCByMonthPeriod-rekk:::: ', { host: returnBRID, monthPeriod: returnMP });
+      console.log('getBRCByMonthPeriod-req::: ', { host: returnBRID, monthPeriod: returnMP });
       const brcs = await BillRunCandidate.find({ host: returnBRID, monthPeriod: returnMP });
-      console.log('getBRCByMonthPeriod:::: ', brcs.length);
+      console.log('getBRCByMonthPeriod-resp::: ', brcs.length);
 
       // res.status(200).json(brcs);
       res.json(brcs);
