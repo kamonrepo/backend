@@ -26,7 +26,7 @@ export const checkLatestBRC = async (req, res) => {
   try {
 
     let host = req.body.host;
-    let monthPeriod = getFirstDayOfMonth(new Date());
+    let monthPeriod = getFirstDayOfMonth(new Date()); //current/present month
 
     //todoo manila time zone dapat pag mag pe fetch if my relation/logic sa DATE
     const countLatestBRC = await BillRunCandidate.aggregate([
@@ -498,7 +498,6 @@ export const getBRCByMonthPeriod = async (req, res) => {
       res.status(404).json({ message: error.message });
   }
 }
-
 
 export const updateBRC = async (req, res) => {
 
