@@ -1,5 +1,5 @@
 import express from 'express';
-import { checkLatestBRC, getBillrunCandidate, updateBRC, getBRCByBRId, getBRCByMonthPeriod,computeFees, createBRC } from '../controllers/billruncandidate.js';
+import { generateBRCviaAlert, checkLatestBRC, getBillrunCandidate, updateBRC, getBRCByBRId, getBRCByMonthPeriod,computeFees, createBRC } from '../controllers/billruncandidate.js';
 
 const router = express.Router();
     router.post('/', createBRC);
@@ -8,6 +8,7 @@ const router = express.Router();
     router.get('/:id', getBRCByBRId);
     router.post('/monthPeriod', getBRCByMonthPeriod);
     router.post('/checklatestbrc', checkLatestBRC);
+    router.post('/generatebrcviaalert', generateBRCviaAlert);
     router.patch('/updateBRC', updateBRC);
 
 export default router;

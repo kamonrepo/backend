@@ -43,7 +43,6 @@ function addOneMonth(dateString) {
     return formattedDate;
 }
 
-
 function AccountNoUniqueTimeStamp(date) { // example: "09142023202404"
     
     // Get month, day, year, hours, minutes, and seconds

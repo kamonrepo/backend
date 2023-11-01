@@ -1,9 +1,46 @@
 import express from 'express';
 import BillRunCandidate from '../models/billruncandidate.js';
 import BillRun from '../models/billrun.js';
+import Client from '../models/client.js';
 import mongoose from 'mongoose';
 
 const router = express.Router();
+
+export const generateBRCviaAlert = async (req, res) => {
+
+  try {
+
+    let fetchActiveClients = await Client.find({ status: 'Active' }); //and status is active
+    let activeCients = fetchActiveClients.length;
+
+    console.log('generateBRCviaAlert-activeCients::: ', activeCients);
+
+    for(let k=0; k<activeCients; k++) {
+
+      groupTotalMF = groupTotalMF + parseInt(fetchActiveClients[x].monthlyFee); 
+
+      let newBillRunCandidate = new BillRunCandidate({
+          host: 'need ng host id sa req',
+          client: fetchActiveClients[x]._id,
+          name: fetchActiveClients[x].name,
+          plan: fetchActiveClients[x].plan,
+          planName: fetchActiveClients[x].planName,
+          monthlyFee: fetchActiveClients[x].monthlyFee,
+          paymentInfo: '---',
+          status: '---'
+
+  });
+      await newBillRunCandidate.save();      
+
+
+    }
+
+    res.status(200).json(fetchActiveClients);
+
+  } catch(err) {
+    res.status(500).json({ message: err.message });
+  }
+}
 
 function getFirstDayOfMonth(date) {
   // Create a new Date object with the same year and month 
