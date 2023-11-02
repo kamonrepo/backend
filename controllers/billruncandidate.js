@@ -12,30 +12,27 @@ export const generateBRCviaAlert = async (req, res) => {
 
     let fetchActiveClients = await Client.find({ status: 'Active' }); //and status is active
     let activeCients = fetchActiveClients.length;
-
-    console.log('generateBRCviaAlert-activeCients::: ', activeCients);
+    let selectedHost =  req.body.host;
+    let mp = req.body.monthPeriod;
 
     for(let k=0; k<activeCients; k++) {
-
-      groupTotalMF = groupTotalMF + parseInt(fetchActiveClients[x].monthlyFee); 
+      let mfData = { period: mp, amount: fetchActiveClients[k].monthlyFee }
 
       let newBillRunCandidate = new BillRunCandidate({
-          host: 'need ng host id sa req',
-          client: fetchActiveClients[x]._id,
-          name: fetchActiveClients[x].name,
-          plan: fetchActiveClients[x].plan,
-          planName: fetchActiveClients[x].planName,
-          monthlyFee: fetchActiveClients[x].monthlyFee,
-          paymentInfo: '---',
-          status: '---'
+          host: selectedHost,
+          client: fetchActiveClients[k]._id, 
+          name: fetchActiveClients[k].name,
+          plan: fetchActiveClients[k].plan,
+          planName: fetchActiveClients[k].planName,
+          dueDate: fetchActiveClients[k].dueDate,
+          monthlyFee: mfData,
+          status: 'NOTPAID'
+      });
 
-  });
       await newBillRunCandidate.save();      
-
-
     }
 
-    res.status(200).json(fetchActiveClients);
+    res.status(200).json({ data: `${activeCients} BRC/s successfully added to mongodb`});
 
   } catch(err) {
     res.status(500).json({ message: err.message });
