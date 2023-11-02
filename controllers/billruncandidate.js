@@ -14,6 +14,7 @@ export const generateBRCviaAlert = async (req, res) => {
     let activeCients = fetchActiveClients.length;
     let selectedHost =  req.body.host;
     let mp = req.body.monthPeriod;
+    let monthPeriod = getFirstDayOfMonth(new Date()); 
 
     for(let k=0; k<activeCients; k++) {
       let mfData = { period: mp, amount: fetchActiveClients[k].monthlyFee }
@@ -26,6 +27,7 @@ export const generateBRCviaAlert = async (req, res) => {
           planName: fetchActiveClients[k].planName,
           dueDate: fetchActiveClients[k].dueDate,
           monthlyFee: mfData,
+          monthPeriod: monthPeriod, 
           status: 'NOTPAID'
       });
 
