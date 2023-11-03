@@ -10,32 +10,36 @@ export const generateBRCviaAlert = async (req, res) => {
 
   try {
 
-    let fetchActiveClients = await Client.find({ status: 'Active' }); //and status is active
-    let activeCients = fetchActiveClients.length;
     let selectedHost =  req.body.host;
     let mp = req.body.monthPeriod;
     let monthPeriod = getFirstDayOfMonth(new Date()); 
+    console.log('selectedHost ... ', selectedHost);
+    let fetchActiveClients = await Client.find({ targetlocId: selectedHost }); // todo index ?
+    let activeCients = fetchActiveClients.length;
+
+    console.log('activeCients ... ', activeCients);
 
     for(let k=0; k<activeCients; k++) {
-      let mfData = { period: mp, amount: fetchActiveClients[k].monthlyFee }
+      console.log('saving ... ', fetchActiveClients[k]);
 
-      let newBillRunCandidate = new BillRunCandidate({
-          host: selectedHost,
-          client: fetchActiveClients[k]._id, 
-          name: fetchActiveClients[k].name,
-          plan: fetchActiveClients[k].plan,
-          planName: fetchActiveClients[k].planName,
-          dueDate: fetchActiveClients[k].dueDate,
-          monthlyFee: mfData,
-          monthPeriod: monthPeriod, 
-          status: 'NOTPAID'
-      });
-
-      await newBillRunCandidate.save();      
+      // let mfData = { period: mp, amount: fetchActiveClients[k].monthlyFee }
+      // let newBillRunCandidate = new BillRunCandidate({
+      //     host: selectedHost,
+      //     client: fetchActiveClients[k]._id, 
+      //     name: fetchActiveClients[k].name,
+      //     plan: fetchActiveClients[k].plan,
+      //     planName: fetchActiveClients[k].planName,
+      //     dueDate: fetchActiveClients[k].dueDate,
+      //     monthlyFee: mfData,
+      //     monthPeriod: monthPeriod, 
+      //     status: 'NOTPAID'
+      // });
+      // console.log('saving ... ', newBillRunCandidate);
+      //newBillRunCandidate.monthlyFee.push(mfData);
+      // await newBillRunCandidate.save();      
     }
 
     res.status(200).json({ data: `${activeCients} BRC/s successfully added to mongodb`});
-
   } catch(err) {
     res.status(500).json({ message: err.message });
   }
