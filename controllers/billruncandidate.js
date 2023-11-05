@@ -13,30 +13,33 @@ export const generateBRCviaAlert = async (req, res) => {
     let selectedHost =  req.body.host;
     let mp = req.body.monthPeriod;
     let monthPeriod = getFirstDayOfMonth(new Date()); 
-    console.log('selectedHost ... ', selectedHost);
-    let fetchActiveClients = await Client.find({ targetlocId: selectedHost }); // todo index ?
+
+    console.log('selectedHost ... ', selectedHost); //targetlocID dapat, not BRID !
+
+    let fetchActiveClients = await Client.find({ targetlocId: selectedHost, status: 'Active'}); // todo index ?
     let activeCients = fetchActiveClients.length;
 
     console.log('activeCients ... ', activeCients);
 
     for(let k=0; k<activeCients; k++) {
-      console.log('saving ... ', fetchActiveClients[k]);
+      console.log('inside the loop... saving data... ');
 
-      // let mfData = { period: mp, amount: fetchActiveClients[k].monthlyFee }
-      // let newBillRunCandidate = new BillRunCandidate({
-      //     host: selectedHost,
-      //     client: fetchActiveClients[k]._id, 
-      //     name: fetchActiveClients[k].name,
-      //     plan: fetchActiveClients[k].plan,
-      //     planName: fetchActiveClients[k].planName,
-      //     dueDate: fetchActiveClients[k].dueDate,
-      //     monthlyFee: mfData,
-      //     monthPeriod: monthPeriod, 
-      //     status: 'NOTPAID'
-      // });
-      // console.log('saving ... ', newBillRunCandidate);
-      //newBillRunCandidate.monthlyFee.push(mfData);
-      // await newBillRunCandidate.save();      
+      let mfData = { period: mp, amount: fetchActiveClients[k].monthlyFee }
+      
+      let newBillRunCandidate = new BillRunCandidate({
+          host: selectedHost,
+          client: fetchActiveClients[k]._id, 
+          name: fetchActiveClients[k].name,
+          plan: fetchActiveClients[k].plan,
+          planName: fetchActiveClients[k].planName,
+          dueDate: fetchActiveClients[k].dueDate,
+          monthlyFee: mfData,
+          monthPeriod: monthPeriod, 
+          status: 'NOTPAID'
+      });
+
+      newBillRunCandidate.monthlyFee.push(mfData);
+      await newBillRunCandidate.save();      
     }
 
     res.status(200).json({ data: `${activeCients} BRC/s successfully added to mongodb`});
