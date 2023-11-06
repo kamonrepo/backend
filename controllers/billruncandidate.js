@@ -12,21 +12,20 @@ export const generateBRCviaAlert = async (req, res) => {
 
     let holdTargetlocId =  req.body.targetlocId;
     let brid =  req.body.brid;
+
     let mp = req.body.monthPeriod;
     let monthPeriod = getFirstDayOfMonth(new Date()); 
-
-    console.log('targetlocId ... ', holdTargetlocId); //targetlocID dapat, not BRID !
 
     let fetchActiveClients = await Client.find({ targetlocId: holdTargetlocId, status: 'Active'}); // todo index ?
     let activeCients = fetchActiveClients.length;
 
-    console.log('activeCients ... ', activeCients);
-
     for(let k=0; k<activeCients; k++) {
-      console.log('inside the loop... saving data... ');
 
+      //yung mga paid
       let mfData = { period: mp, amount: fetchActiveClients[k].monthlyFee }
-      
+
+      //yung mga unpaid/overdue
+
       let newBillRunCandidate = new BillRunCandidate({
           host: brid,
           client: fetchActiveClients[k]._id, 

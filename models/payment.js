@@ -1,16 +1,16 @@
 import mongoose from 'mongoose';
+import moment from 'moment-timezone';
 
 const paymentSchema = mongoose.Schema({
 
     billrun: { type: mongoose.Schema.Types.ObjectId, ref: 'billruns'},
     client: { type: mongoose.Schema.Types.ObjectId, ref: 'clients'},
-    recentPaymentPeriod: { type: String },
-    createdAt: {
+    summary: [],
+    manilaTZ: {
         type: Date,
-        default: new Date()
+        default: moment.tz('Asia/Manila').format()
     }
 })
-
 
 
 export default mongoose.model("payments", paymentSchema);

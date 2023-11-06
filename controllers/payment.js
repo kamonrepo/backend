@@ -1,4 +1,5 @@
 import express from 'express';
+import moment from 'moment-timezone';
 import Payment from '../models/payment.js';
 import AccumulatedPayment from '../models/accumulatedpayment.js';
 import BillRunCandidate from '../models/billruncandidate.js';
@@ -153,69 +154,78 @@ export const updatePayment = async (req, res) => {
         } 
 
         else {  // update to PAID
-                 
-              //console.log('updatePayment-UPDATE-TO-PAID-req.body: ', req.body);
-    
+                  
             let brid = req.body.selectedBr;
             //let clientName = req.body.selectedBr;
             let brcId = req.body.selectedIDs[0];
-            let mfAboutToPay = req.body.selectedMFs[0];
+            let mfAboutToPay = req.body.selectedMFs[0].amount;
             let clientId = req.body.selectedBRCClient[0];
             let determinePeriod = determineMonthPeriod(new Date());
     
             const _getPaymentBy_BRID_CLIENT_ID = await Payment.find({ billrun: brid, client: clientId }); 
     
-            if(_getPaymentBy_BRID_CLIENT_ID.length !== 0) { //payment _id FOUND -> UPDATE by payment Id
+            if(_getPaymentBy_BRID_CLIENT_ID.length !== 0) { 
+                //payment id FOUND !!! -> UPDATE by payment Id
                 //add safety validation here if BRC status is UNPAID -> then updatye sa PAID
                 //console.log('scenario: ma pa find ko ung BRC na nag UNPAID then mag PAID ulit ngayon, nag ka record na sya Payments, update PAID status lang ulit', _getPaymentBy_BRID_CLIENT_ID);
-    
+              
+                console.log('PAYMENT ID NOT FOUND!!!');
                 let executeStatusUpdateBRC = null;
     
-                try {
-                    executeStatusUpdateBRC =  await BillRunCandidate.findByIdAndUpdate(brcId, { status: 'PAID', paymentDate: new Date() });
+                // try {
+                //     executeStatusUpdateBRC =  await BillRunCandidate.findByIdAndUpdate(brcId, { status: 'PAID', paymentDate: new Date() });
     
-                    if(executeStatusUpdateBRC) {
+                //     if(executeStatusUpdateBRC) {
                         
-                        let executeStatusUpdateACCUPYT = null;
+                //         let executeStatusUpdateACCUPYT = null;
     
-                        try { //update by brc
+                //         try { //update by brc
     
-                            executeStatusUpdateACCUPYT = await findAndUpdateByBRC(brcId, 'PAID');
+                //             executeStatusUpdateACCUPYT = await findAndUpdateByBRC(brcId, 'PAID');
     
-                            if(executeStatusUpdateACCUPYT) {
-                            } else {
-                            }
+                //             if(executeStatusUpdateACCUPYT) {
+                //             } else {
+                //             }
     
-                        } catch(error) {
-                            console.log('catch-AccumulatedPayment-UPDATE-TO-PAID-findByIdAndUpdate-error: ', error);
-                            res.status(404).json({ message: error.message });
-                        }
-                    }
+                //         } catch(error) {
+                //             console.log('catch-AccumulatedPayment-UPDATE-TO-PAID-findByIdAndUpdate-error: ', error);
+                //             res.status(404).json({ message: error.message });
+                //         }
+                //     }
     
-                } catch(error) {
-                    console.log('catch-BillRunCandidate-UPDATE-TO-PAID-findByIdAndUpdate-error: ', error);
-                    res.status(404).json({ message: error.message });
-                }
+                // } catch(error) {
+                //     console.log('catch-BillRunCandidate-UPDATE-TO-PAID-findByIdAndUpdate-error: ', error);
+                //     res.status(404).json({ message: error.message });
+                // }
     
             }
             
             else  { 
-                 // payment _id NOT_FOUND -> FIRST TIME CREATION of payment 
-                // console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
-    
-                //update BRC status by BRCID
-                let executeStatusUpdate = null;
+                 // payment id NOT FOUND !!! -> FIRST TIME CREATION of payment 
+                 // console.log('updatePayment-payment-id-NOT-FOUND, FIRST TIME CREATION of payment ', req.body);
+                 
+                 console.log('PAYMENT ID NOT FOUND !!!');
+                 
+                 //update BRC status by BRCID
+                 let executeStatusUpdate = null;
     
                 try {
                     executeStatusUpdate =  await BillRunCandidate.findByIdAndUpdate(req.body.selectedIDs[0], { status: 'PAID', paymentDate: new Date() });
                       
                     if(executeStatusUpdate) {
                         console.log('BillRunCandidate update status to PAID done!');
-    
+
+                        let rupdate = new Date().toString();
+                        console.log('rupdate: ', rupdate);
+
+                        let mp = getFirstDayOfMonth(new Date());
+
+                        let mfData = { monthPeriod: mp, amount: mfAboutToPay }
+
                         let paymentPayload = { 
                             billrun: brid,
                             client: clientId,
-                            recentPaymentPeriod: 'latest PAID month period on accumulated payment - fetch via billrun id'
+                            summary: [mfData]
                         }
             
                         const firstTimePayment = new Payment(paymentPayload);
@@ -232,9 +242,9 @@ export const updatePayment = async (req, res) => {
                                     brid: brid,
                                     payment: firstTimePayment._id,
                                     period: determinePeriod,
-                                    paymentDate: new Date(),
+                                    manilaTz: moment.tz('Asia/Manila').format().toString(), //todo format in manila time zone
                                     mode: modeOpt,
-                                    amount: mfAboutToPay,
+                                    monthlyFee: mfData,
                                     status: 'PAID'
                                 }
             
@@ -247,39 +257,31 @@ export const updatePayment = async (req, res) => {
                                             try {
                                                 const brcs = await BillRunCandidate.findById(brcId);
                                                 if(brcs){
-                                                    let currentMonthPeriod = brcs.monthPeriod; // string: Eg. 10-1-2023
-                                                    let updatedMonthPeriod = addOneMonth(currentMonthPeriod);
-
-                                                    //let sharedValue = addOneMonth(getFirstDayOfMonth(new Date()));
-
-                                                    let mfData = { period: sharedValue, amount: brcs.monthlyFee }
-            
-                                                    let payload = {
-                                                        host: brid,
-                                                        client: clientId,
-                                                        name: brcs.name,
-                                                        plan: brcs.plan,
-                                                        planName: brcs.planName,
-                                                        dueDate: brcs.dueDate,
-                                                        monthPeriod: updatedMonthPeriod, 
-                                                        paymentDate: formatDateManila(new Date()),
-                                                        status: 'NOTPAID'
-                                                    }
-            
-                                                    let newBillRunCandidate = new BillRunCandidate(payload);
-
-                                                    console.log('firstTimeAccumulatedPayment-PUSH-THIS-TO-MF::: ', brcs);
                                                     
-                                                    console.log('---MF::: ', newBillRunCandidate);
+                                                    // let currentMonthPeriod = brcs.monthPeriod; // string: Eg. 10-1-2023
+                                                    // let updatedMonthPeriod = addOneMonth(currentMonthPeriod);
+                                                    // //let sharedValue = addOneMonth(getFirstDayOfMonth(new Date()));
+                                                    // let mfData = { period: sharedValue, amount: brcs.monthlyFee }
+                                                    // let payload = {
+                                                    //     host: brid,
+                                                    //     client: clientId,
+                                                    //     name: brcs.name,
+                                                    //     plan: brcs.plan,
+                                                    //     planName: brcs.planName,
+                                                    //     dueDate: brcs.dueDate,
+                                                    //     monthPeriod: updatedMonthPeriod, 
+                                                    //     paymentDate: formatDateManila(new Date()),
+                                                    //     status: 'NOTPAID'
+                                                    // }
+                                                    // let newBillRunCandidate = new BillRunCandidate(payload);
+                                                    // newBillRunCandidate.monthlyFee.push(brcs.monthlyFee);
 
-                                                    newBillRunCandidate.monthlyFee.push(brcs.monthlyFee);
                                                     try {
             
-                                                        newBillRunCandidate.save();
-                                                        console.log('BillRunCandidate save done');
+                                                       // newBillRunCandidate.save();
+                                                        //console.log('BillRunCandidate save done');
+                                                        // end ng auto add brc right away upon paymentes. WALA YON REMOVE NA !
                     
-                                                        if(newBillRunCandidate) {
-
                                                             //fetch account no on client model
                                                             let cl = await Client.findById(clientId);
                                                             let serviceCateg = await Category.findById(cl.category);
@@ -287,8 +289,10 @@ export const updatePayment = async (req, res) => {
                                                             try {
                                                             //generate report
                                                             let discount = 0; //tododo ? san trigger ng discount ? prior payment ? 
-                                                            let subTotal = parseFloat(newBillRunCandidate.monthlyFee);
-                                                            let computeTATP = subTotal - parseFloat(discount);
+                                                            // let subTotal = parseFloat(newBillRunCandidate.monthlyFee);
+                                                            // let computeTATP = subTotal - parseFloat(discount);
+                                                            let subTotal = 0.0; //todo
+                                                            let computeTATP = 0.0; //todo
 
                                                             let buildPayload = {
                                                                 body: {
@@ -298,7 +302,7 @@ export const updatePayment = async (req, res) => {
                                                                     accountNumber: cl.accountNumber,
                                                                     accountStatus: cl.status,
                                                                     planName:  brcs.planName,
-                                                                    statementDate: newBillRunCandidate.paymentDate,
+                                                                    statementDate: 'todo',
                                                                     billingReferenceNo: 'todo',
                                                                     type: serviceCateg.category,
                                                                     descriptions: 'N/A',
@@ -366,7 +370,7 @@ export const updatePayment = async (req, res) => {
                                                                 console.log('generateBase64 error: ', error);
                                                                 res.status(404).json({ message: error.message });
                                                             }
-                                                        }
+                                                        
             
                                                     } catch (error) {
                                                         console.log('catch-newBillRunCandidate.save()-error: ', error);
