@@ -10,13 +10,14 @@ export const generateBRCviaAlert = async (req, res) => {
 
   try {
 
-    let selectedHost =  req.body.host;
+    let holdTargetlocId =  req.body.targetlocId;
+    let brid =  req.body.brid;
     let mp = req.body.monthPeriod;
     let monthPeriod = getFirstDayOfMonth(new Date()); 
 
-    console.log('selectedHost ... ', selectedHost); //targetlocID dapat, not BRID !
+    console.log('targetlocId ... ', holdTargetlocId); //targetlocID dapat, not BRID !
 
-    let fetchActiveClients = await Client.find({ targetlocId: selectedHost, status: 'Active'}); // todo index ?
+    let fetchActiveClients = await Client.find({ targetlocId: holdTargetlocId, status: 'Active'}); // todo index ?
     let activeCients = fetchActiveClients.length;
 
     console.log('activeCients ... ', activeCients);
@@ -27,7 +28,7 @@ export const generateBRCviaAlert = async (req, res) => {
       let mfData = { period: mp, amount: fetchActiveClients[k].monthlyFee }
       
       let newBillRunCandidate = new BillRunCandidate({
-          host: selectedHost,
+          host: brid,
           client: fetchActiveClients[k]._id, 
           name: fetchActiveClients[k].name,
           plan: fetchActiveClients[k].plan,
