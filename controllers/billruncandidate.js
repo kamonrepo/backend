@@ -38,8 +38,8 @@ export const generateBRCviaAlert = async (req, res) => {
           status: 'NOTPAID'
       });
 
-      newBillRunCandidate.monthlyFee.push(mfData);
       await newBillRunCandidate.save();      
+    
     }
 
     res.status(200).json({ data: `${activeCients} BRC/s successfully added to mongodb`});
